@@ -1,0 +1,17 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: biblio_codigojava_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: Jean-Luc_Picard_1966
+      MYSQL_DATABASE: biblio_codigojava
+    ports:
+      - "3310:3306"
+    volumes:
+      - ./sql/create_schema.sql:/docker-entrypoint-initdb.d/create_schema.sql
+      - ./sql/data.sql:/docker-entrypoint-initdb.d/data.sql
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
