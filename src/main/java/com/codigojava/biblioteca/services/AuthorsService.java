@@ -8,4 +8,6 @@ public interface AuthorsService {
 
     List<AuthorsDto> findAll();
 
+    AuthorsDto findById(Integer id);
+
 }
