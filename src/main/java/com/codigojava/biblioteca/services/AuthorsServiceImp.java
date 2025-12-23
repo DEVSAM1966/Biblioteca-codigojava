@@ -50,4 +50,17 @@ public class AuthorsServiceImp implements AuthorsService {
             throw new BdNotFoundException("GET - There are not authors in the database");
         }
     }
+
+    @Override
+    public List<AuthorsDto> findByName(final String name) {
+        final List<AuthorsEntity> authorsList =
+                this.authorsRepository.findByNameAuthorContainingIgnoreCase(name);
+
+        if (CollectionUtils.isEmpty(authorsList)) {
+            log.warn("findByName for authors - There are not authors in the database");
+            return Collections.emptyList();
+        } else {
+            return this.authorsMapper.asDtoList(authorsList);
+        }
+    }
 }

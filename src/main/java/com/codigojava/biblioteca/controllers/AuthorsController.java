@@ -33,4 +33,10 @@ public class AuthorsController {
     public ResponseEntity<AuthorsDto> findById(@Validated @PathVariable Integer id) {
         return ResponseEntity.ok(this.authorsService.findById(id));
     }
+
+    @GetMapping(value = "/name/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<AuthorsDto>> findByName(@Validated @PathVariable String name) {
+        return ResponseEntity.ok(this.authorsService.findByName(name));
+    }
+
 }
