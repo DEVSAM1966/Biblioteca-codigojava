@@ -10,4 +10,6 @@ public interface AuthorsService {
 
     AuthorsDto findById(Integer id);
 
+    List<AuthorsDto> findByName(String name);
+
 }
