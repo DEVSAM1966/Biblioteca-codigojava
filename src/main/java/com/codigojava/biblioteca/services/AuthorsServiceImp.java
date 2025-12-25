@@ -2,6 +2,7 @@ package com.codigojava.biblioteca.services;
 
 import com.codigojava.biblioteca.dtos.AuthorsDto;
 import com.codigojava.biblioteca.entities.AuthorsEntity;
+import com.codigojava.biblioteca.exceptions.BdInternalException;
 import com.codigojava.biblioteca.exceptions.BdNotFoundException;
 import com.codigojava.biblioteca.mappers.AuthorsMapper;
 import com.codigojava.biblioteca.repositories.AuthorsRepository;
@@ -47,7 +48,7 @@ public class AuthorsServiceImp implements AuthorsService {
         if (authorOptional.isPresent()) {
             return authorsMapper.asDto(authorOptional.get());
         } else {
-            throw new BdNotFoundException("GET - There are not authors in the database");
+            throw new BdNotFoundException("GET - There is not authors in the database with the id: " + id);
         }
     }
 
@@ -63,4 +64,22 @@ public class AuthorsServiceImp implements AuthorsService {
             return this.authorsMapper.asDtoList(authorsList);
         }
     }
+
+    @Override
+    public Boolean deleteById(final Integer id) {
+        final Optional<AuthorsEntity> existAuthors = this.authorsRepository.findById(id);
+
+        if (existAuthors.isEmpty()) {
+            throw new BdNotFoundException("DELETE - No author found with id: " + id);
+        }
+
+        try {
+            this.authorsRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            throw new BdInternalException( "DELETE - Error deleting author. Possible cause: table missing or DB inconsistency." );
+            }
+
+    }
+
 }

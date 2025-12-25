@@ -34,4 +34,17 @@ public class GlobalControlAdvice {
 
     }
 
+    @ExceptionHandler(BdInternalException.class)
+    public ResponseEntity<Object> bdInternalHandler(Exception e) {
+
+        ApiError apiError = ApiError.builder()
+                .message(e.getMessage())
+                .description("(Exception) - Internal error occurred in database")
+                .date(java.time.LocalDate.now())
+                .build();
+
+        return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
+
+    }
+
 }
