@@ -12,4 +12,6 @@ public interface AuthorsService {
 
     List<AuthorsDto> findByName(String name);
 
+    Boolean deleteById(Integer id);
+
 }
