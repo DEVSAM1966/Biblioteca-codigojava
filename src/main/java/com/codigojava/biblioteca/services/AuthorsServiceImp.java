@@ -1,14 +1,17 @@
 package com.codigojava.biblioteca.services;
 
+import com.codigojava.biblioteca.dataholders.AuthorsDh;
 import com.codigojava.biblioteca.dtos.AuthorsDto;
 import com.codigojava.biblioteca.entities.AuthorsEntity;
 import com.codigojava.biblioteca.exceptions.BdInternalException;
 import com.codigojava.biblioteca.exceptions.BdNotFoundException;
+import com.codigojava.biblioteca.exceptions.BdNotSaveException;
 import com.codigojava.biblioteca.mappers.AuthorsMapper;
 import com.codigojava.biblioteca.repositories.AuthorsRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -34,7 +37,7 @@ public class AuthorsServiceImp implements AuthorsService {
                 this.authorsRepository.findAll(Sort.by(Sort.Direction.ASC, "authorId"));
 
         if (CollectionUtils.isEmpty(authorsList)) {
-            log.warn("findAll for authors - There are not authors in the database");
+            log.warn("FindAll for authors - There are not authors in the database");
             return Collections.emptyList();
         } else {
             return this.authorsMapper.asDtoList(authorsList);
@@ -58,7 +61,7 @@ public class AuthorsServiceImp implements AuthorsService {
                 this.authorsRepository.findByNameAuthorContainingIgnoreCase(name);
 
         if (CollectionUtils.isEmpty(authorsList)) {
-            log.warn("findByName for authors - There are not authors in the database");
+            log.warn("FindByName for authors - There are not authors in the database");
             return Collections.emptyList();
         } else {
             return this.authorsMapper.asDtoList(authorsList);
@@ -77,8 +80,27 @@ public class AuthorsServiceImp implements AuthorsService {
             this.authorsRepository.deleteById(id);
             return true;
         } catch (Exception e) {
+            log.warn("Delete for authors - Error deleting author. Possible cause: {}", e.getMessage());
             throw new BdInternalException( "DELETE - Error deleting author. Possible cause: table missing or DB inconsistency." );
             }
+
+    }
+
+    @Override
+    public AuthorsDto save(final AuthorsDh authorsDh) {
+
+        final AuthorsEntity authors = this.authorsMapper.asEntity(authorsDh);
+
+        try {
+            final AuthorsEntity authorsSaved = this.authorsRepository.save(authors);
+            return authorsMapper.asDto(authorsSaved);
+        } catch (DataIntegrityViolationException e) {
+            log.warn("Save for authors - Integrity violation: {}", e.getMessage());
+            throw new BdNotSaveException("POST - Error saving author. Possible cause: duplicated data or constraint violation.");
+        } catch (Exception e) {
+            log.warn("Save for authors - Error saving author. Possible cause: {}", e.getMessage());
+            throw new BdNotSaveException("POST - Error save author.  Possible cause: BD inconsistency or internal failure.");
+        }
 
     }
 
