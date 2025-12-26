@@ -1,5 +1,6 @@
 package com.codigojava.biblioteca.controllers;
 
+import com.codigojava.biblioteca.dataholders.AuthorsDh;
 import com.codigojava.biblioteca.dtos.AuthorsDto;
 import com.codigojava.biblioteca.services.AuthorsService;
 import lombok.NonNull;
@@ -39,6 +40,11 @@ public class AuthorsController {
     @DeleteMapping(value = "/id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Boolean> deleteById(@Validated @PathVariable final Integer id) {
         return ResponseEntity.ok(this.authorsService.deleteById(id));
+    }
+
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<AuthorsDto> create(@Validated @RequestBody final AuthorsDh authorsDh) {
+        return ResponseEntity.ok(this.authorsService.save(authorsDh));
     }
 
 }
