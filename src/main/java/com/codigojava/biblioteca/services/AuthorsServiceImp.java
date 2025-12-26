@@ -1,6 +1,7 @@
 package com.codigojava.biblioteca.services;
 
-import com.codigojava.biblioteca.dataholders.AuthorsDh;
+import com.codigojava.biblioteca.dataholders.AuthorsCreatedDh;
+import com.codigojava.biblioteca.dataholders.AuthorsUpdatedDh;
 import com.codigojava.biblioteca.dtos.AuthorsDto;
 import com.codigojava.biblioteca.entities.AuthorsEntity;
 import com.codigojava.biblioteca.exceptions.BdInternalException;
@@ -87,7 +88,7 @@ public class AuthorsServiceImp implements AuthorsService {
     }
 
     @Override
-    public AuthorsDto save(final AuthorsDh authorsDh) {
+    public AuthorsDto save(final AuthorsCreatedDh authorsDh) {
 
         final AuthorsEntity authors = this.authorsMapper.asEntity(authorsDh);
 
@@ -103,5 +104,30 @@ public class AuthorsServiceImp implements AuthorsService {
         }
 
     }
+
+    @Override
+    public AuthorsDto updateById(final Integer id, final AuthorsUpdatedDh authorsDh) {
+
+        final AuthorsEntity existingAuthor = this.authorsRepository.findById(id)
+                .orElseThrow(() -> new BdNotFoundException("PUT - No author found with id: " + id));
+
+        if (authorsDh.getAuthorId() != null && !authorsDh.getAuthorId().equals(id)) {
+            throw new BdNotSaveException(
+                    "PUT - Parameters are incorrect: authorId " + authorsDh.getAuthorId() + " is different from id " + id );
+        }
+
+        try {
+            existingAuthor.setNameAuthor(authorsDh.getNameAuthor());
+            final AuthorsEntity updatedAuthor = this.authorsRepository.save(existingAuthor);
+            return this.authorsMapper.asDto(updatedAuthor);
+
+        } catch (Exception e) {
+            throw new BdInternalException(
+                    "PUT - Error saving author. Possible cause: DB inconsistency or internal failure."
+            );
+        }
+
+    }
+
 
 }

@@ -1,6 +1,7 @@
 package com.codigojava.biblioteca.services;
 
-import com.codigojava.biblioteca.dataholders.AuthorsDh;
+import com.codigojava.biblioteca.dataholders.AuthorsCreatedDh;
+import com.codigojava.biblioteca.dataholders.AuthorsUpdatedDh;
 import com.codigojava.biblioteca.dtos.AuthorsDto;
 
 import java.util.List;
@@ -15,6 +16,8 @@ public interface AuthorsService {
 
     Boolean deleteById(Integer id);
 
-    AuthorsDto save(AuthorsDh authorsDh);
+    AuthorsDto save(AuthorsCreatedDh authorsDh);
+
+    AuthorsDto updateById(Integer id, AuthorsUpdatedDh authorsDh);
 
 }
