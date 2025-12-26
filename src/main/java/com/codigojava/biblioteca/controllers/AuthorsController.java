@@ -1,6 +1,7 @@
 package com.codigojava.biblioteca.controllers;
 
-import com.codigojava.biblioteca.dataholders.AuthorsDh;
+import com.codigojava.biblioteca.dataholders.AuthorsCreatedDh;
+import com.codigojava.biblioteca.dataholders.AuthorsUpdatedDh;
 import com.codigojava.biblioteca.dtos.AuthorsDto;
 import com.codigojava.biblioteca.services.AuthorsService;
 import lombok.NonNull;
@@ -43,8 +44,13 @@ public class AuthorsController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AuthorsDto> create(@Validated @RequestBody final AuthorsDh authorsDh) {
+    public ResponseEntity<AuthorsDto> create(@Validated @RequestBody final AuthorsCreatedDh authorsDh) {
         return ResponseEntity.ok(this.authorsService.save(authorsDh));
+    }
+
+    @PutMapping(value = "/id/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<AuthorsDto> updateById(@Validated @PathVariable final Integer id, @Validated @RequestBody final AuthorsUpdatedDh authorsDh) {
+        return ResponseEntity.ok(this.authorsService.updateById(id, authorsDh));
     }
 
 }
