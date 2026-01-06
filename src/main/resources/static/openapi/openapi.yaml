@@ -1,0 +1,168 @@
+openapi: 3.1.0
+info:
+  title: API Biblioteca
+  version: 1.0.0
+  description: Documentación de la API de Biblioteca
+
+tags:
+  - name: Authors
+    description: Endpoints para gestionar autores
+
+paths:
+
+  /authors:
+    get:
+      tags: [Authors]
+      summary: Obtener todos los autores
+      responses:
+        '200':
+          description: Lista de autores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AuthorsDto'
+
+    post:
+      tags: [Authors]
+      summary: Crear un nuevo autor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorsCreatedDh'
+      responses:
+        '200':
+          description: Autor creado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorsDto'
+
+  /authors/id/{id}:
+    get:
+      tags: [Authors]
+      summary: Buscar autor por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 3
+      responses:
+        '200':
+          description: Autor encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorsDto'
+
+    delete:
+      tags: [Authors]
+      summary: Eliminar autor por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 3
+      responses:
+        '200':
+          description: Resultado de la eliminación
+          content:
+            application/json:
+              schema:
+                type: boolean
+                example: true
+
+    put:
+      tags: [Authors]
+      summary: Actualizar autor por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 3
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorsUpdatedDh'
+      responses:
+        '200':
+          description: Autor actualizado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorsDto'
+
+  /authors/name/{name}:
+    get:
+      tags: [Authors]
+      summary: Buscar autores por nombre
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "Gabriel"
+      responses:
+        '200':
+          description: Lista de autores que coinciden con el nombre
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AuthorsDto'
+
+components:
+  schemas:
+
+    AuthorsDto:
+      type: object
+      properties:
+        authorId:
+          type: integer
+          example: 12
+        nameAuthor:
+          type: string
+          example: "Gabriel García Márquez"
+
+    AuthorsCreatedDh:
+      type: object
+      required:
+        - nameAuthor
+      properties:
+        nameAuthor:
+          type: string
+          minLength: 4
+          maxLength: 100
+          pattern: "^[\\p{L} .'’\\-]+$"
+          example: "Isabel Allende"
+
+    AuthorsUpdatedDh:
+      type: object
+      required:
+        - authorId
+        - nameAuthor
+      properties:
+        authorId:
+          type: integer
+          minimum: 1
+          example: 5
+        nameAuthor:
+          type: string
+          minLength: 4
+          maxLength: 100
+          pattern: "^[\\p{L} .'’\\-]+$"
+          example: "Mario Vargas Llosa"
+
