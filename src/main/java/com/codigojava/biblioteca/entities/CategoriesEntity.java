@@ -20,7 +20,7 @@ public class CategoriesEntity {
     @Column(name = "name_category", length = 30)
     private String nameCategory;
 
-    @Column(name = "subtopic_name", length = 30)
+    @Column(name = "subtopic_category", length = 30)
     private String subtopicCategory;
 
 }
