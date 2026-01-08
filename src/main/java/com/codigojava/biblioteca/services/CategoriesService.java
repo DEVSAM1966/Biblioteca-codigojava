@@ -8,4 +8,6 @@ public interface CategoriesService {
 
     List<CategoriesDto> findAll();
 
+    CategoriesDto findById(Integer id);
+
 }
