@@ -2,6 +2,7 @@ package com.codigojava.biblioteca.services;
 
 import com.codigojava.biblioteca.dtos.CategoriesDto;
 import com.codigojava.biblioteca.entities.CategoriesEntity;
+import com.codigojava.biblioteca.exceptions.BdNotFoundException;
 import com.codigojava.biblioteca.mappers.CategoriesMapper;
 import com.codigojava.biblioteca.repositories.CategoriesRepository;
 import lombok.NonNull;
@@ -13,6 +14,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -37,4 +39,16 @@ public class CategoriesServiceImp implements CategoriesService {
             return this.categoriesMapper.asDtoList(categoriesList);
         }
     }
+
+    @Override
+    public CategoriesDto findById(Integer id) {
+        final Optional<CategoriesEntity> categoryOptional = this.categoriesRepository.findById(id);
+
+        if (categoryOptional.isPresent()) {
+            return this.categoriesMapper.asDto(categoryOptional.get());
+        } else {
+            throw new BdNotFoundException("GET - There is not categories in the database with the id: " + id);
+        }
+    }
+
 }

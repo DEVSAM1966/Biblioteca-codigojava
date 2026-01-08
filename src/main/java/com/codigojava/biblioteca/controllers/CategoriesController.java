@@ -7,7 +7,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,4 +28,10 @@ public class CategoriesController {
     public ResponseEntity<List<CategoriesDto>> listAll() {
         return ResponseEntity.ok(this.categoriesService.findAll());
     }
+
+    @GetMapping(value = "/id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CategoriesDto> findById(@Validated @PathVariable Integer id) {
+        return ResponseEntity.ok(this.categoriesService.findById(id));
+    }
+
 }
