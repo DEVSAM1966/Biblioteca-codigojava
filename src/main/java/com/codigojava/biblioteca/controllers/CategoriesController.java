@@ -34,4 +34,9 @@ public class CategoriesController {
         return ResponseEntity.ok(this.categoriesService.findById(id));
     }
 
+    @GetMapping(value = "/name/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<CategoriesDto>> findByName(@Validated @PathVariable String name) {
+        return ResponseEntity.ok(this.categoriesService.findByName(name));
+    }
+
 }
