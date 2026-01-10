@@ -10,4 +10,6 @@ public interface CategoriesService {
 
     CategoriesDto findById(Integer id);
 
+    List<CategoriesDto> findByName(String name);
+
 }

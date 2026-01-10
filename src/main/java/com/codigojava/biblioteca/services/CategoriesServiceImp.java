@@ -41,13 +41,27 @@ public class CategoriesServiceImp implements CategoriesService {
     }
 
     @Override
-    public CategoriesDto findById(Integer id) {
+    public CategoriesDto findById(final Integer id) {
         final Optional<CategoriesEntity> categoryOptional = this.categoriesRepository.findById(id);
 
         if (categoryOptional.isPresent()) {
             return this.categoriesMapper.asDto(categoryOptional.get());
         } else {
             throw new BdNotFoundException("GET - There is not categories in the database with the id: " + id);
+        }
+    }
+
+    @Override
+    public List<CategoriesDto> findByName(final String name) {
+        final List<CategoriesEntity> categoriesList =
+                this.categoriesRepository
+                        .findByNameCategoryContainingIgnoreCaseOrSubtopicCategoryContainingIgnoreCase(name, name);
+
+        if (CollectionUtils.isEmpty(categoriesList)) {
+            log.warn("FindByName for categories - There are not categories in the database");
+            return Collections.emptyList();
+        } else {
+            return this.categoriesMapper.asDtoList(categoriesList);
         }
     }
 
