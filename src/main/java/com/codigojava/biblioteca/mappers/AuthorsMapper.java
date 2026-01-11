@@ -15,7 +15,7 @@ public interface AuthorsMapper {
 
     AuthorsEntity asEntity(AuthorsUpdatedDh authorsDh);
 
-    List<AuthorsDto> asEntityList(List<AuthorsCreatedDh>  authorsDhList);
+    List<AuthorsEntity> asEntityList(List<AuthorsCreatedDh>  authorsDhList);
 
     AuthorsDto asDto(AuthorsEntity authors);
 
