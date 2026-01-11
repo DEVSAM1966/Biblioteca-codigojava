@@ -15,7 +15,7 @@ public interface CategoriesMapper {
 
     CategoriesEntity asEntity(CategoriesUpdatedDh categoriesDh);
 
-    List<CategoriesDto> asEntityList(List<CategoriesCreatedDh> categoriesDhList);
+    List<CategoriesEntity> asEntityList(List<CategoriesCreatedDh> categoriesDhList);
 
     CategoriesDto asDto(CategoriesEntity categories);
 
