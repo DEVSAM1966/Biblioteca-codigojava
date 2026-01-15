@@ -27,7 +27,7 @@ public abstract class PublishersBaseDh {
     private String province;
      //solo numeros
     @Size(max = 20, message = "Postal code cannot exceed 20 characters")
-    @Pattern(regexp = "^\\d+$", message = "Postal code must contain only numbers")
+    @Pattern(regexp = "^[A-Za-z0-9\\s-]+$", message = "Postal code must contain only numbers")
     private String postalCode;
 
     @Size(max = 30, message = "Country cannot exceed 30 characters")
@@ -36,7 +36,7 @@ public abstract class PublishersBaseDh {
 
     // solo numeros y algunos caracteres especiales pero no letras 
     @Size(max = 16, message = "Phone number cannot exceed 16 characters")
-    @Pattern(regexp = "^[0-9+\\-\\s()]*$", message = "Phone number contains invalid characters (letters are not allowed)")
+    @Pattern(regexp = "^[0-9+\\-\\s()]{6,16}$", message = "Phone number contains invalid characters (letters are not allowed)")
     private String phone;
 
     @Size(max = 255, message = "Notes cannot exceed 255 characters")
