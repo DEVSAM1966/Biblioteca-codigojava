@@ -8,7 +8,14 @@ tags:
   - name: Authors
     description: Endpoints para gestionar autores
 
+  - name: Categories
+    description: Endpoints para gestionar categorías
+
 paths:
+
+  ########################################
+  #              AUTHORS
+  ########################################
 
   /authors:
     get:
@@ -124,8 +131,132 @@ paths:
                 items:
                   $ref: '#/components/schemas/AuthorsDto'
 
+
+  ########################################
+  #              CATEGORIES
+  ########################################
+
+  /categories:
+    get:
+      tags: [Categories]
+      summary: Obtener todas las categorías
+      responses:
+        '200':
+          description: Lista de categorías
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CategoriesDto'
+
+    post:
+      tags: [Categories]
+      summary: Crear una nueva categoría
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoriesCreatedDh'
+      responses:
+        '200':
+          description: Categoría creada correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoriesDto'
+
+  /categories/id/{id}:
+    get:
+      tags: [Categories]
+      summary: Buscar categoría por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 3
+      responses:
+        '200':
+          description: Categoría encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoriesDto'
+
+    delete:
+      tags: [Categories]
+      summary: Eliminar categoría por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 3
+      responses:
+        '200':
+          description: Resultado de la eliminación
+          content:
+            application/json:
+              schema:
+                type: boolean
+                example: true
+
+    put:
+      tags: [Categories]
+      summary: Actualizar categoría por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 3
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoriesUpdatedDh'
+      responses:
+        '200':
+          description: Categoría actualizada correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoriesDto'
+
+  /categories/name/{name}:
+    get:
+      tags: [Categories]
+      summary: Buscar categorías por nombre o subtema
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "Ficción"
+      responses:
+        '200':
+          description: Lista de categorías encontradas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CategoriesDto'
+
+
 components:
   schemas:
+
+    ########################################
+    #              AUTHORS SCHEMAS
+    ########################################
 
     AuthorsDto:
       type: object
@@ -166,3 +297,57 @@ components:
           pattern: "^[\\p{L} .'’\\-]+$"
           example: "Mario Vargas Llosa"
 
+
+    ########################################
+    #              CATEGORIES SCHEMAS
+    ########################################
+
+    CategoriesDto:
+      type: object
+      properties:
+        categoryId:
+          type: integer
+          example: 5
+        nameCategory:
+          type: string
+          example: "Ciencia Ficción"
+        subtopicCategory:
+          type: string
+          example: "Robots"
+
+    CategoriesCreatedDh:
+      type: object
+      required:
+        - nameCategory
+      properties:
+        nameCategory:
+          type: string
+          minLength: 3
+          maxLength: 30
+          pattern: "^[\\p{L} .'’\\-]+$"
+          example: "Fantasía"
+        subtopicCategory:
+          type: string
+          maxLength: 30
+          example: "Épica"
+
+    CategoriesUpdatedDh:
+      type: object
+      required:
+        - categoryId
+        - nameCategory
+      properties:
+        categoryId:
+          type: integer
+          minimum: 1
+          example: 3
+        nameCategory:
+          type: string
+          minLength: 3
+          maxLength: 30
+          pattern: "^[\\p{L} .'’\\-]+$"
+          example: "Distopía"
+        subtopicCategory:
+          type: string
+          maxLength: 30
+          example: "Política"
