@@ -60,13 +60,13 @@ CREATE TABLE users (
                        province VARCHAR(30),
                        postal_code VARCHAR(20),
                        country VARCHAR(30),
-                       phone VARCHAR(16),
-                       email VARCHAR(120),
+                       phone VARCHAR(16) UNIQUE,
+                       email VARCHAR(120) UNIQUE,
                        password VARCHAR(255),
                        registration_date DATE,
                        user_drop BOOLEAN DEFAULT FALSE,
                        days_disciplinary INT DEFAULT 0,
-                       rol VARCHAR(20)
+                       role VARCHAR(20)
 );
 
 CREATE TABLE loans (
