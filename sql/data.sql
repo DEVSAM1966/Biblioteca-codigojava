@@ -51,7 +51,7 @@ INSERT INTO books (isbn, title, pages, summary, edition_date, book_cover, book_f
 -- =========================
 -- USUARIOS
 -- =========================
-INSERT INTO users (fullname, dni, address, city, province, postal_code, country, phone, email, password, registration_date, user_drop, days_disciplinary, rol) VALUES
+INSERT INTO users (fullname, dni, address, city, province, postal_code, country, phone, email, password, registration_date, user_drop, days_disciplinary, role) VALUES
                                                                                                                                                                    ('Ana Pérez', '12345678A', 'Calle Luna 5', 'Madrid', 'Madrid', '28001', 'España', '+34-600000001', 'ana@example.com', 'hashedpass1', '2024-01-15', FALSE, 0, 'USER'),
                                                                                                                                                                    ('Luis Gómez', '87654321B', 'Calle Sol 8', 'Barcelona', 'Cataluña', '08002', 'España', '+34-600000002', 'luis@example.com', 'hashedpass2', '2024-02-20', FALSE, 0, 'SUPPORT'),
                                                                                                                                                                    ('Marta Ruiz', '11223344C', 'Av. Mar 10', 'Valencia', 'Valencia', '46001', 'España', '+34-600000003', 'marta@example.com', 'hashedpass3', '2024-03-10', FALSE, 0, 'ADMIN'),
