@@ -1,5 +1,6 @@
 package com.codigojava.biblioteca.dtos;
 
+import com.codigojava.biblioteca.entities.RoleEnum;
 import lombok.Data;
 
 import java.util.Date;
@@ -35,6 +36,6 @@ public class UsersDto {
 
    private Integer daysDisciplinary;
    
-   private String role;
+   private RoleEnum role;
 
 }
