@@ -5,15 +5,19 @@ import com.codigojava.biblioteca.dataholders.CategoriesUpdatedDh;
 import com.codigojava.biblioteca.dtos.CategoriesDto;
 import com.codigojava.biblioteca.entities.CategoriesEntity;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring",
+        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE
+)
 public interface CategoriesMapper {
 
     CategoriesEntity asEntity(CategoriesCreatedDh categoriesDh);
 
-    CategoriesEntity asEntity(CategoriesUpdatedDh categoriesDh);
+    void updateEntityFromDh(CategoriesUpdatedDh categoriesDh, @MappingTarget CategoriesEntity entity);
 
     List<CategoriesEntity> asEntityList(List<CategoriesCreatedDh> categoriesDhList);
 

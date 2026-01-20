@@ -114,9 +114,10 @@ public class CategoriesServiceImp implements CategoriesService {
         }
 
         try {
-            existingCategory.setNameCategory(categoriesDh.getNameCategory());
-            existingCategory.setSubtopicCategory(categoriesDh.getSubtopicCategory());
+            categoriesMapper.updateEntityFromDh(categoriesDh, existingCategory);
+
             final CategoriesEntity updatedCategory = this.categoriesRepository.save(existingCategory);
+
             return this.categoriesMapper.asDto(updatedCategory);
 
         } catch (Exception e) {
