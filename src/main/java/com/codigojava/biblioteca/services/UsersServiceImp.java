@@ -8,6 +8,7 @@ import com.codigojava.biblioteca.repositories.UsersRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.User;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -48,6 +49,19 @@ public class UsersServiceImp implements UsersService{
             return this.usersMapper.asDto(userOptional.get());
         } else {
             throw new BdNotFoundException("GET - There is not users in the database with the id: " + id);
+        }
+    }
+
+    @Override
+    public List<UsersDto> findByName(final String name) {
+        final List<UsersEntity> usersList =
+                this.usersRepository.findByFullnameContainingIgnoreCase(name);
+
+        if (CollectionUtils.isEmpty(usersList)) {
+            log.warn("FindAll for users - There are not users in database with name: {}", name);
+            return Collections.emptyList();
+        } else {
+            return this.usersMapper.asDtoList(usersList);
         }
     }
 
