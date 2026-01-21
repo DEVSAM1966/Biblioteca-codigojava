@@ -9,4 +9,7 @@ public interface UsersService {
     List<UsersDto> findAll();
 
     UsersDto findById(Integer id);
+
+    List<UsersDto> findByName(String name);
+
 }

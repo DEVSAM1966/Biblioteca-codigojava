@@ -34,4 +34,9 @@ public class UsersController {
         return ResponseEntity.ok(this.usersService.findById(id));
     }
 
+    @GetMapping(value = "/name/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<UsersDto>> findByName(@Validated @PathVariable String name) {
+        return ResponseEntity.ok(this.usersService.findByName(name));
+    }
+
 }
