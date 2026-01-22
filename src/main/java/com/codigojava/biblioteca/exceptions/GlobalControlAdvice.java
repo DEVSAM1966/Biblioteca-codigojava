@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @ControllerAdvice
 public class GlobalControlAdvice {
@@ -66,4 +67,46 @@ public class GlobalControlAdvice {
         body.put("validationErrors", errors);
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(DhValidationException.class)
+    public ResponseEntity<Object> handleDhValidationException(DhValidationException ex) {
+        Map<String, String> validationErrors = new HashMap<>();
+        validationErrors.put(ex.getField(), ex.getMessage());
+
+        ApiError apiError = ApiError.builder()
+            .message("Validation failed")
+            .description("Some fields are invalid")
+            .date(LocalDate.now())
+            .build();
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("validationErrors", validationErrors);
+        body.put("error", apiError);
+
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<Object> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+
+        String field = ex.getName(); // normalmente "id"
+
+        Map<String, String> validationErrors = Map.of(
+            field, "The value must be a valid integer"
+        );
+
+        ApiError apiError = ApiError.builder()
+            .message("Validation failed")
+            .description("Some fields are invalid")
+            .date(LocalDate.now())
+            .build();
+
+        Map<String, Object> body = Map.of(
+            "validationErrors", validationErrors,
+            "error", apiError
+        );
+
+        return ResponseEntity.badRequest().body(body);
+    }
+
 }
