@@ -88,6 +88,24 @@ public class UsersServiceImp implements UsersService{
     }
 
     @Override
+    public Boolean deleteLogicById(final Integer id) {
+
+        UsersEntity user = this.usersRepository.findById(id)
+                .orElseThrow(() -> new BdNotFoundException("DELETE - No users found with id: " + id));
+
+        try {
+            user.setUserDrop(true);
+            this.usersRepository.save(user);
+            return true;
+
+        } catch (Exception e) {
+            log.warn("Delete logic for users - Error writing in field userDrop. Possible cause: {}", e.getMessage());
+            throw new BdInternalException("DELETE LOGIC - Error deleting user. Possible cause: table missing or DB inconsistency.");
+        }
+    }
+
+
+    @Override
     public UsersDto save(final UsersCreatedDh usersDh) {
         final UsersEntity users = this.usersMapper.asEntity(usersDh);
 
