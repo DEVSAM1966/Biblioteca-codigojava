@@ -3,6 +3,7 @@ package com.codigojava.biblioteca.dtos;
 import com.codigojava.biblioteca.entities.RoleEnum;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
@@ -30,7 +31,7 @@ public class UsersDto {
 
    private String password;
 
-   private Date registrationDate;
+   private LocalDate registrationDate;
 
    private boolean userDrop;
 

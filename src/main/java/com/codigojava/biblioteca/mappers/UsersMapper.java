@@ -5,6 +5,7 @@ import com.codigojava.biblioteca.dataholders.UsersUpdatedDh;
 import com.codigojava.biblioteca.dtos.UsersDto;
 import com.codigojava.biblioteca.entities.UsersEntity;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
@@ -15,6 +16,7 @@ import java.util.List;
 )
 public interface UsersMapper {
 
+    @Mapping(target = "role", defaultValue = "USER")
     UsersEntity asEntity(UsersCreatedDh usersDh);
 
     void updateEntityFromDh(UsersUpdatedDh usersDh, @MappingTarget UsersEntity entity);
