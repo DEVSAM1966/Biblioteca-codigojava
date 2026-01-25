@@ -20,5 +20,7 @@ public interface UsersService {
 
     UsersDto updateById(Integer id, UsersUpdatedDh usersUpdatedDh);
 
+    Boolean deleteLogicById(Integer id);
+
 }
 
