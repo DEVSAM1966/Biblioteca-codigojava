@@ -1,5 +1,7 @@
 package com.codigojava.biblioteca.controllers;
 
+import com.codigojava.biblioteca.dataholders.UsersCreatedDh;
+import com.codigojava.biblioteca.dataholders.UsersUpdatedDh;
 import com.codigojava.biblioteca.dtos.UsersDto;
 import com.codigojava.biblioteca.services.UsersService;
 import lombok.NonNull;
@@ -9,10 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.codigojava.biblioteca.exceptions.DhValidationException;
 import com.codigojava.biblioteca.dataholders.NameValidationGenericDh;
 import com.codigojava.biblioteca.validators.DhValidator;
@@ -57,4 +56,30 @@ public class UsersController {
         return ResponseEntity.ok(this.usersService.findByName(name));
     }
 
+    @DeleteMapping(value = "/id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Boolean> deleteById(@Validated @PathVariable final Integer id) {
+
+        if (id == null || id <= 0) {
+            throw new DhValidationException("id", "The id must be a positive integer greater than 0");
+        }
+
+        return ResponseEntity.ok(this.usersService.deleteById(id));
+    }
+
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UsersDto> save(@Validated @RequestBody final UsersCreatedDh usersDh) {
+        return ResponseEntity.ok(this.usersService.save(usersDh));
+    }
+
+    @PutMapping(value = "/id/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UsersDto> updateById(@Validated @PathVariable final Integer id, @Validated @RequestBody final UsersUpdatedDh usersDh) {
+
+        if (id == null || id <= 0) {
+            throw new DhValidationException("id", "The id must be a positive integer greater than 0");
+        }
+
+        return ResponseEntity.ok(this.usersService.updateById(id, usersDh));
+    }
+
 }
+
