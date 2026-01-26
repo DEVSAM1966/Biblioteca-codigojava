@@ -11,6 +11,9 @@ tags:
   - name: Categories
     description: Endpoints para gestionar categorías
 
+  - name: Users
+    description: Endpoints para gestionar usuarios
+
 paths:
 
   ########################################
@@ -251,6 +254,148 @@ paths:
                   $ref: '#/components/schemas/CategoriesDto'
 
 
+  ########################################
+  #                 USERS
+  ########################################
+
+  /users:
+    get:
+      tags: [ Users ]
+      summary: Obtener todos los usuarios
+      responses:
+        '200':
+          description: Lista de usuarios
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UsersDto'
+
+    post:
+      tags: [ Users ]
+      summary: Crear un nuevo usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsersCreatedDh'
+      responses:
+        '200':
+          description: Usuario creado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersDto'
+
+
+  /users/id/{id}:
+    get:
+      tags: [ Users ]
+      summary: Buscar usuario por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 8
+      responses:
+        '200':
+          description: Usuario encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersDto'
+
+    delete:
+      tags: [ Users ]
+      summary: Eliminar usuario por ID (borrado físico)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 8
+      responses:
+        '200':
+          description: Resultado de la eliminación
+          content:
+            application/json:
+              schema:
+                type: boolean
+                example: true
+
+    put:
+      tags: [ Users ]
+      summary: Actualizar usuario por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 8
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsersUpdatedDh'
+      responses:
+        '200':
+          description: Usuario actualizado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersDto'
+
+
+  /users/name/{name}:
+    get:
+      tags: [ Users ]
+      summary: Buscar usuarios por nombre
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "Carlos"
+      responses:
+        '200':
+          description: Lista de usuarios encontrados
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UsersDto'
+
+
+  /users/drop/id/{id}:
+    delete:
+      tags: [ Users ]
+      summary: Borrado lógico de usuario por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 8
+      responses:
+        '200':
+          description: Resultado del borrado lógico
+          content:
+            application/json:
+              schema:
+                type: boolean
+                example: true
+
+
 components:
   schemas:
 
@@ -351,3 +496,189 @@ components:
           type: string
           maxLength: 30
           example: "Política"
+
+
+    ########################################
+    #              USERS SCHEMAS
+    ########################################
+
+    UsersDto:
+      type: object
+      properties:
+        userId:
+          type: integer
+          example: 8
+        fullname:
+          type: string
+          example: "Juan Carlos Díez"
+        dni:
+          type: string
+          example: "44556677X"
+        address:
+          type: string
+          example: "Calle Verde 15; 2 - E"
+        city:
+          type: string
+          example: "Sevilla"
+        province:
+          type: string
+          example: "Andalucía"
+        postalCode:
+          type: string
+          example: "41001"
+        country:
+          type: string
+          example: "España"
+        phone:
+          type: string
+          example: "+34600000010"
+        email:
+          type: string
+          example: "carlos@example.com"
+        password:
+          type: string
+          example: "********"
+        registrationDate:
+          type: string
+          example: "2026/01/25"
+        userDrop:
+          type: boolean
+          example: false
+        daysDisciplinary:
+          type: integer
+          example: 0
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+
+
+
+    UsersCreatedDh:
+      type: object
+      required:
+        - fullname
+        - dni
+        - phone
+        - email
+        - password
+      properties:
+        fullname:
+          type: string
+          maxLength: 120
+          pattern: "^[\\p{L}0-9\\s\\.,'’\\-\\u00B7]*$"
+          example: "Carlos Díez"
+        dni:
+          type: string
+          maxLength: 20
+          example: "44556677X"
+        address:
+          type: string
+          maxLength: 100
+          example: "Calle Verde 13; 1 - D"
+        city:
+          type: string
+          maxLength: 40
+          example: "Sevilla"
+        province:
+          type: string
+          maxLength: 30
+          example: "Andalucía"
+        postalCode:
+          type: string
+          maxLength: 20
+          pattern: "^[A-Za-z0-9\\s\\-]{3,12}$"
+          example: "41001"
+        country:
+          type: string
+          maxLength: 30
+          example: "España"
+        phone:
+          type: string
+          maxLength: 16
+          pattern: "^\\+?[0-9\\s\\-()]{6,20}$"
+          example: "+34600000010"
+        email:
+          type: string
+          maxLength: 120
+          pattern: "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
+          example: "carlos@example.com"
+        password:
+          type: string
+          minLength: 8
+          maxLength: 25
+          pattern: "^(?=(?:.*[A-Z]){2,})(?=(?:.*[a-z]){2,})(?=.*\\d).{8,25}$"
+          example: "CARLOSdiez13"
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+
+
+
+    UsersUpdatedDh:
+      type: object
+      required:
+        - userId
+      properties:
+        userId:
+          type: integer
+          minimum: 1
+          example: 8
+        fullname:
+          type: string
+          maxLength: 120
+          pattern: "^[\\p{L}0-9\\s\\.,'’\\-\\u00B7]*$"
+          example: "Juan Carlos Díez Cocoliso"
+        address:
+          type: string
+          maxLength: 100
+          example: "Calle Verde 15; 2 - E"
+        city:
+          type: string
+          maxLength: 40
+          example: "Sevilla"
+        province:
+          type: string
+          maxLength: 30
+          example: "Andalucía"
+        postalCode:
+          type: string
+          maxLength: 20
+          pattern: "^[A-Za-z0-9\\s\\-]{3,12}$"
+          example: "41001"
+        country:
+          type: string
+          maxLength: 30
+          example: "España"
+        phone:
+          type: string
+          maxLength: 16
+          pattern: "^\\+?[0-9\\s\\-()]{6,20}$"
+          example: "+34600000010"
+        email:
+          type: string
+          maxLength: 120
+          pattern: "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
+          example: "carlos@example.com"
+        password:
+          type: string
+          minLength: 8
+          maxLength: 25
+          pattern: "^(?=(?:.*[A-Z]){2,})(?=(?:.*[a-z]){2,})(?=.*\\d).{8,25}$"
+          example: "CARLOSdiez13"
+        userDrop:
+          type: boolean
+          example: false
+        daysDisciplinary:
+          type: integer
+          minimum: 0
+          example: 0
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+
+
+    RoleEnum:
+      type: string
+      description: Rol asignado al usuario dentro del sistema
+      enum:
+        - ADMIN
+        - SUPPORT
+        - USER
+      example: USER
