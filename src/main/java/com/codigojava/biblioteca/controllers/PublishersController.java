@@ -2,7 +2,7 @@ package com.codigojava.biblioteca.controllers;
 
 import com.codigojava.biblioteca.dtos.PublishersDto;
 import com.codigojava.biblioteca.services.PublishersService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,14 +12,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/publishers")
+@RequiredArgsConstructor
 public class PublishersController {
 
-    @Autowired
-    private PublishersService publishersService;
+    private final PublishersService publishersService;
 
     @GetMapping
-    public ResponseEntity<List<PublishersDto>> getAllPublishers() {
-        List<PublishersDto> publishers = publishersService.findAllPublishers();
+    public ResponseEntity<List<PublishersDto>> findAll() {
+        List<PublishersDto> publishers = publishersService.findAll();
         return ResponseEntity.ok(publishers);
     }
 }
