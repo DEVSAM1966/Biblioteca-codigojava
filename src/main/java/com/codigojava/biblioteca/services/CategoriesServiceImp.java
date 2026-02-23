@@ -1,7 +1,7 @@
 package com.codigojava.biblioteca.services;
 
-import com.codigojava.biblioteca.dataholders.CategoriesCreatedDh;
-import com.codigojava.biblioteca.dataholders.CategoriesUpdatedDh;
+import com.codigojava.biblioteca.dataholders.CategoriesRecordDh;
+import com.codigojava.biblioteca.dataholders.CategoriesUpdatedRecordDh;
 import com.codigojava.biblioteca.dtos.CategoriesDto;
 import com.codigojava.biblioteca.entities.CategoriesEntity;
 import com.codigojava.biblioteca.exceptions.BdInternalException;
@@ -88,7 +88,7 @@ public class CategoriesServiceImp implements CategoriesService {
     }
 
     @Override
-    public CategoriesDto save(final CategoriesCreatedDh categoriesDh) {
+    public CategoriesDto save(final CategoriesRecordDh categoriesDh) {
         final CategoriesEntity categories = this.categoriesMapper.asEntity(categoriesDh);
 
         try {
@@ -104,13 +104,13 @@ public class CategoriesServiceImp implements CategoriesService {
     }
 
     @Override
-    public CategoriesDto updateById(final Integer id, final CategoriesUpdatedDh categoriesDh) {
+    public CategoriesDto updateById(final Integer id, final CategoriesUpdatedRecordDh categoriesDh) {
         final CategoriesEntity existingCategory = this.categoriesRepository.findById(id)
                 .orElseThrow(() -> new BdNotFoundException("PUT - No category found with id: " + id));
 
-        if (categoriesDh.getCategoryId() != null && !categoriesDh.getCategoryId().equals(id)) {
+        if (categoriesDh.categoryId() != null && !categoriesDh.categoryId().equals(id)) {
             throw new BdNotSaveException(
-                    "PUT - Parameters are incorrect: categoryId " + categoriesDh.getCategoryId() + " is different from id " + id );
+                    "PUT - Parameters are incorrect: categoryId " + categoriesDh.categoryId() + " is different from id " + id );
         }
 
         try {

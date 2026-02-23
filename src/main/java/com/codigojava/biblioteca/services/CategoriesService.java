@@ -1,7 +1,7 @@
 package com.codigojava.biblioteca.services;
 
-import com.codigojava.biblioteca.dataholders.CategoriesCreatedDh;
-import com.codigojava.biblioteca.dataholders.CategoriesUpdatedDh;
+import com.codigojava.biblioteca.dataholders.CategoriesRecordDh;
+import com.codigojava.biblioteca.dataholders.CategoriesUpdatedRecordDh;
 import com.codigojava.biblioteca.dtos.CategoriesDto;
 
 import java.util.List;
@@ -16,8 +16,8 @@ public interface CategoriesService {
 
     Boolean deleteById(Integer id);
 
-    CategoriesDto save(CategoriesCreatedDh  categoriesCreatedDh);
+    CategoriesDto save(CategoriesRecordDh categoriesCreatedDh);
 
-    CategoriesDto updateById(Integer id, CategoriesUpdatedDh categoriesUpdatedDh);
+    CategoriesDto updateById(Integer id, CategoriesUpdatedRecordDh categoriesUpdatedDh);
 
 }

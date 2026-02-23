@@ -1,9 +1,10 @@
 package com.codigojava.biblioteca.controllers;
 
-import com.codigojava.biblioteca.dataholders.UsersCreatedDh;
-import com.codigojava.biblioteca.dataholders.UsersUpdatedDh;
+import com.codigojava.biblioteca.dataholders.*;
 import com.codigojava.biblioteca.dtos.UsersDto;
 import com.codigojava.biblioteca.services.UsersService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import com.codigojava.biblioteca.exceptions.DhValidationException;
-import com.codigojava.biblioteca.dataholders.NameValidationGenericDh;
 import com.codigojava.biblioteca.validators.DhValidator;
 
 import java.util.List;
@@ -77,17 +77,12 @@ public class UsersController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UsersDto> save(@Validated @RequestBody final UsersCreatedDh usersDh) {
+    public ResponseEntity<UsersDto> save(@Validated @RequestBody final UsersRecordDh usersDh) {
         return ResponseEntity.ok(this.usersService.save(usersDh));
     }
 
     @PutMapping(value = "/id/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UsersDto> updateById(@Validated @PathVariable final Integer id, @Validated @RequestBody final UsersUpdatedDh usersDh) {
-
-        if (id == null || id <= 0) {
-            throw new DhValidationException("id", "The id must be a positive integer greater than 0");
-        }
-
+    public ResponseEntity<UsersDto> updateById(@Valid @PathVariable @Min(1) final Integer id, @Validated @RequestBody final UsersUpdatedRecordDh usersDh) {
         return ResponseEntity.ok(this.usersService.updateById(id, usersDh));
     }
 

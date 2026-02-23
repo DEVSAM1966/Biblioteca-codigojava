@@ -1,9 +1,10 @@
 package com.codigojava.biblioteca.controllers;
 
-import com.codigojava.biblioteca.dataholders.CategoriesCreatedDh;
-import com.codigojava.biblioteca.dataholders.CategoriesUpdatedDh;
+import com.codigojava.biblioteca.dataholders.*;
 import com.codigojava.biblioteca.dtos.CategoriesDto;
 import com.codigojava.biblioteca.services.CategoriesService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import com.codigojava.biblioteca.exceptions.DhValidationException;
-import com.codigojava.biblioteca.dataholders.NameValidationGenericDh;
 import com.codigojava.biblioteca.validators.DhValidator;
 
 import java.util.List;
@@ -67,17 +67,12 @@ public class CategoriesController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CategoriesDto> save(@Validated @RequestBody final CategoriesCreatedDh categoriesDh) {
+    public ResponseEntity<CategoriesDto> save(@Validated @RequestBody final CategoriesRecordDh categoriesDh) {
         return ResponseEntity.ok(this.categoriesService.save(categoriesDh));
     }
 
     @PutMapping(value = "/id/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CategoriesDto> updateById(@Validated @PathVariable final Integer id, @Validated @RequestBody final CategoriesUpdatedDh categoriesDh) {
-
-        if (id == null || id <= 0) {
-            throw new DhValidationException("id", "The id must be a positive integer greater than 0");
-        }
-
+    public ResponseEntity<CategoriesDto> updateById(@Valid @PathVariable @Min(1) final Integer id, @Validated @RequestBody final CategoriesUpdatedRecordDh categoriesDh) {
         return ResponseEntity.ok(this.categoriesService.updateById(id, categoriesDh));
     }
 

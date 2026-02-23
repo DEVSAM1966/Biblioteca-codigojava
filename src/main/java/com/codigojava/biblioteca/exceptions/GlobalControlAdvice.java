@@ -2,6 +2,7 @@ package com.codigojava.biblioteca.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -108,5 +109,40 @@ public class GlobalControlAdvice {
 
         return ResponseEntity.badRequest().body(body);
     }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<Object> handleMalformedJson(HttpMessageNotReadableException ex) {
+
+        String message = ex.getMessage();
+        String fieldName = null;
+
+        // Intentamos extraer el nombre del campo si aparece en el mensaje
+        if (message != null && message.contains("[")) {
+            int start = message.lastIndexOf("[\"");
+            int end = message.lastIndexOf("\"]");
+            if (start != -1 && end != -1 && end > start) {
+                fieldName = message.substring(start + 2, end);
+            }
+        }
+
+        Map<String, String> validationErrors = new HashMap<>();
+
+        if (fieldName != null) {
+            validationErrors.put(fieldName, "Invalid JSON value or malformed syntax");
+        }
+
+        ApiError apiError = ApiError.builder()
+                .message("Malformed JSON")
+                .description("The request body contains invalid JSON syntax")
+                .date(LocalDate.now())
+                .build();
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("validationErrors", validationErrors);
+        body.put("error", apiError);
+
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
 
 }
