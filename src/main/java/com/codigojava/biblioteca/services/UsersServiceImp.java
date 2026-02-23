@@ -1,7 +1,7 @@
 package com.codigojava.biblioteca.services;
 
-import com.codigojava.biblioteca.dataholders.UsersCreatedDh;
-import com.codigojava.biblioteca.dataholders.UsersUpdatedDh;
+import com.codigojava.biblioteca.dataholders.UsersRecordDh;
+import com.codigojava.biblioteca.dataholders.UsersUpdatedRecordDh;
 import com.codigojava.biblioteca.dtos.UsersDto;
 import com.codigojava.biblioteca.entities.UsersEntity;
 import com.codigojava.biblioteca.exceptions.BdInternalException;
@@ -106,7 +106,7 @@ public class UsersServiceImp implements UsersService{
 
 
     @Override
-    public UsersDto save(final UsersCreatedDh usersDh) {
+    public UsersDto save(final UsersRecordDh usersDh) {
         final UsersEntity users = this.usersMapper.asEntity(usersDh);
 
         try {
@@ -125,13 +125,13 @@ public class UsersServiceImp implements UsersService{
     }
 
     @Override
-    public UsersDto updateById(final Integer id, final UsersUpdatedDh usersDh) {
+    public UsersDto updateById(final Integer id, final UsersUpdatedRecordDh usersDh) {
         final UsersEntity existingUser = this.usersRepository.findById(id)
                 .orElseThrow(() -> new BdNotFoundException("UPDATE - No user found with id: " + id));
 
-        if (usersDh.getUserId() != null && !usersDh.getUserId().equals(id)) {
+        if (usersDh.userId() != null && !usersDh.userId().equals(id)) {
             throw new BdNotSaveException(
-                    "PUT - Parameters are incorrect: userId " + usersDh.getUserId() + " is different from id " + id );
+                    "PUT - Parameters are incorrect: userId " + usersDh.userId() + " is different from id " + id );
         }
 
         try {

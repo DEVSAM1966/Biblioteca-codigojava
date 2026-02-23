@@ -1,7 +1,7 @@
 package com.codigojava.biblioteca.mappers;
 
-import com.codigojava.biblioteca.dataholders.UsersCreatedDh;
-import com.codigojava.biblioteca.dataholders.UsersUpdatedDh;
+import com.codigojava.biblioteca.dataholders.UsersRecordDh;
+import com.codigojava.biblioteca.dataholders.UsersUpdatedRecordDh;
 import com.codigojava.biblioteca.dtos.UsersDto;
 import com.codigojava.biblioteca.entities.UsersEntity;
 import org.mapstruct.Mapper;
@@ -17,11 +17,11 @@ import java.util.List;
 public interface UsersMapper {
 
     @Mapping(target = "role", defaultValue = "USER")
-    UsersEntity asEntity(UsersCreatedDh usersDh);
+    UsersEntity asEntity(UsersRecordDh usersDh);
 
-    void updateEntityFromDh(UsersUpdatedDh usersDh, @MappingTarget UsersEntity entity);
+    void updateEntityFromDh(UsersUpdatedRecordDh usersDh, @MappingTarget UsersEntity entity);
 
-    List<UsersEntity> asEntityList(List<UsersCreatedDh> usersDhList);
+    List<UsersEntity> asEntityList(List<UsersRecordDh> usersDhList);
 
     UsersDto asDto(UsersEntity users);
 

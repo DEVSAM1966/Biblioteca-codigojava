@@ -1,12 +1,12 @@
 package com.codigojava.biblioteca.controllers;
 
-import com.codigojava.biblioteca.dataholders.AuthorsCreatedDh;
-import com.codigojava.biblioteca.dataholders.AuthorsUpdatedDh;
-import com.codigojava.biblioteca.dataholders.NameValidationGenericDh;
+import com.codigojava.biblioteca.dataholders.*;
 import com.codigojava.biblioteca.dtos.AuthorsDto;
 import com.codigojava.biblioteca.exceptions.DhValidationException;
 import com.codigojava.biblioteca.services.AuthorsService;
 import com.codigojava.biblioteca.validators.DhValidator;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -67,17 +67,12 @@ public class AuthorsController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AuthorsDto> create(@Validated @RequestBody final AuthorsCreatedDh authorsDh) {
+    public ResponseEntity<AuthorsDto> create(@Validated @RequestBody final AuthorsRecordDh authorsDh) {
         return ResponseEntity.ok(this.authorsService.save(authorsDh));
     }
 
     @PutMapping(value = "/id/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AuthorsDto> updateById(@Validated @PathVariable final Integer id, @Validated @RequestBody final AuthorsUpdatedDh authorsDh) {
-
-        if (id == null || id <= 0) {
-            throw new DhValidationException("id", "The id must be a positive integer greater than 0");
-        }
-
+    public ResponseEntity<AuthorsDto> updateById(@Validated @PathVariable @Min(1) final Integer id, @Valid @RequestBody final AuthorsUpdatedRecordDh authorsDh) {
         return ResponseEntity.ok(this.authorsService.updateById(id, authorsDh));
     }
 
