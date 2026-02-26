@@ -1,7 +1,10 @@
 package com.codigojava.biblioteca.dtos;
 
+import lombok.Data;
+
 import java.time.LocalDate;
 
+@Data
 public class BooksPublicIsbnDto {
 
     private String isbn;
@@ -25,4 +28,7 @@ public class BooksPublicIsbnDto {
     private String nameCategory;
 
     private String subtopicCategory;
+
+    private String namePublisher;
+
 }
