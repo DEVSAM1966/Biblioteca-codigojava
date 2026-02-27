@@ -2,6 +2,7 @@ package com.codigojava.biblioteca.services;
 
 import com.codigojava.biblioteca.dataholders.BooksRecordDh;
 import com.codigojava.biblioteca.dtos.BooksDto;
+import com.codigojava.biblioteca.dtos.BooksFileDto;
 import com.codigojava.biblioteca.dtos.BooksPublicDto;
 import com.codigojava.biblioteca.dtos.BooksPublicIsbnDto;
 import com.codigojava.biblioteca.entities.BooksEntity;
@@ -69,7 +70,7 @@ public class BooksServiceImp implements BooksService {
         }
     }
 
-    public BooksDto findById(String isbn) {
+    public BooksDto findById(final String isbn) {
         final Optional<BooksEntity> bookOptional = this.booksRepository.findById(isbn);
 
         if (bookOptional.isPresent()) {
@@ -79,7 +80,7 @@ public class BooksServiceImp implements BooksService {
         }
     }
 
-    public BooksPublicIsbnDto findByIdPublic(String isbn) {
+    public BooksPublicIsbnDto findByIdPublic(final String isbn) {
         final Optional<BooksEntity> bookOptional = this.booksRepository.findById(isbn);
 
         if (bookOptional.isPresent()) {
@@ -89,11 +90,33 @@ public class BooksServiceImp implements BooksService {
         }
     }
 
-    public BooksPublicIsbnDto findByIdPrivate(String isbn) {
+    public BooksPublicIsbnDto findByIdPrivate(final String isbn) {
         final Optional<BooksEntity> bookOptional = this.booksRepository.findById(isbn);
 
         if (bookOptional.isPresent()) {
             return this.booksMapper.asPublicIsbnDto(bookOptional.get());
+        } else {
+            throw new BdNotFoundException("GET - There is not books in the database with the isbn: " + isbn);
+        }
+    }
+
+    public List<BooksPublicDto> findByName(final String name) {
+        final List<BooksEntity> booksList =
+                this.booksRepository.findByTitleContainingIgnoreCase(name);
+
+        if (CollectionUtils.isEmpty(booksList)) {
+            log.warn("FindByName for books - There are not books in database with title: {}", name);
+            return Collections.emptyList();
+        } else {
+            return this.booksMapper.asPublicDtoList(booksList);
+        }
+    }
+
+    public BooksFileDto findFileById(final String isbn) {
+        final Optional<BooksEntity> bookOptional = this.booksRepository.findById(isbn);
+
+        if (bookOptional.isPresent()) {
+            return this.booksMapper.asFileDto(bookOptional.get());
         } else {
             throw new BdNotFoundException("GET - There is not books in the database with the isbn: " + isbn);
         }
