@@ -1,6 +1,7 @@
 package com.codigojava.biblioteca.controllers;
 
 import com.codigojava.biblioteca.dtos.BooksDto;
+import com.codigojava.biblioteca.dtos.BooksFileDto;
 import com.codigojava.biblioteca.dtos.BooksPublicDto;
 import com.codigojava.biblioteca.dtos.BooksPublicIsbnDto;
 import com.codigojava.biblioteca.mappers.BooksMapper;
@@ -64,6 +65,18 @@ public class BooksController {
     public ResponseEntity<BooksPublicIsbnDto> findByIdPrivate(
             @Valid @Size(min = 10, max = 13) @PathVariable final String isbn) {
         return ResponseEntity.ok(this.booksService.findByIdPublic(isbn));
+    }
+
+    @GetMapping(value = "/title/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<BooksPublicDto>> findByName(
+            @Valid @Size(max = 55) @PathVariable final String name) {
+        return ResponseEntity.ok(this.booksService.findByName(name));
+    }
+
+    @GetMapping(value = "/private/file/{isbn}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<BooksFileDto> findFileById(
+            @Valid @Size(min = 10, max = 13) @PathVariable final String isbn) {
+        return ResponseEntity.ok(this.booksService.findFileById(isbn));
     }
 
 }

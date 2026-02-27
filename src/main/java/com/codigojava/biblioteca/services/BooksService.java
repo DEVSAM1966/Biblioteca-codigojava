@@ -1,6 +1,7 @@
 package com.codigojava.biblioteca.services;
 
 import com.codigojava.biblioteca.dtos.BooksDto;
+import com.codigojava.biblioteca.dtos.BooksFileDto;
 import com.codigojava.biblioteca.dtos.BooksPublicDto;
 import com.codigojava.biblioteca.dtos.BooksPublicIsbnDto;
 
@@ -24,5 +25,15 @@ public interface BooksService {
     BooksPublicIsbnDto findByIdPublic(String isbn);
 
     BooksPublicIsbnDto findByIdPrivate(String isbn);
+
+
+    // Obtener un libro o varios según patron contenido en name, se busca por title
+
+    List<BooksPublicDto> findByName(String name);
+
+
+    //Obtener la ruta + nombre del fichero PDF
+
+    BooksFileDto findFileById(String isbn);
 
 }
