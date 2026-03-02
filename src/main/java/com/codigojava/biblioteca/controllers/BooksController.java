@@ -1,5 +1,6 @@
 package com.codigojava.biblioteca.controllers;
 
+import com.codigojava.biblioteca.dataholders.BooksRecordDh;
 import com.codigojava.biblioteca.dtos.BooksDto;
 import com.codigojava.biblioteca.dtos.BooksFileDto;
 import com.codigojava.biblioteca.dtos.BooksPublicDto;
@@ -15,10 +16,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -77,6 +76,11 @@ public class BooksController {
     public ResponseEntity<BooksFileDto> findFileById(
             @Valid @Size(min = 10, max = 13) @PathVariable final String isbn) {
         return ResponseEntity.ok(this.booksService.findFileById(isbn));
+    }
+
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<BooksDto> save(@Validated @RequestBody final BooksRecordDh booksDh) {
+        return ResponseEntity.ok(this.booksService.save(booksDh));
     }
 
 }
