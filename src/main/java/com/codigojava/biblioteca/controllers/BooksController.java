@@ -83,4 +83,11 @@ public class BooksController {
         return ResponseEntity.ok(this.booksService.save(booksDh));
     }
 
+    @PutMapping(value = "/isbn/{isbn}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<BooksDto> updateById(
+            @Valid @Size(min = 10, max = 13) @PathVariable final String isbn,
+            @Validated @RequestBody final BooksRecordDh booksDh) {
+        return ResponseEntity.ok(this.booksService.updateById(isbn, booksDh));
+    }
+
 }

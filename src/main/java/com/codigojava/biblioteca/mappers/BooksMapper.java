@@ -8,6 +8,7 @@ import com.codigojava.biblioteca.dtos.BooksPublicIsbnDto;
 import com.codigojava.biblioteca.entities.BooksEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
 import java.util.List;
@@ -45,5 +46,7 @@ public interface BooksMapper {
     List<BooksPublicDto> asPublicDtoList(List<BooksEntity> booksLists);
 
     List<BooksPublicDto> asPrivateDtoList(List<BooksEntity> booksLists);
+
+    void updateEntityFromDh(BooksRecordDh booksDh, @MappingTarget BooksEntity entity);
 
 }
