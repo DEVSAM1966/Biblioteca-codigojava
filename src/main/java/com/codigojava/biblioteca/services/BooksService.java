@@ -33,4 +33,7 @@ public interface BooksService {
     // Método POST - Crear un libro
     BooksDto save(BooksRecordDh bookDh);
 
+    // Método PUT - Modificar un libro y subir ficheros (portada y PDF)
+    BooksDto updateById(String ibsn, BooksRecordDh bookDh);
+
 }

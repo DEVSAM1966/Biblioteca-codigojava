@@ -6,6 +6,7 @@ import com.codigojava.biblioteca.dtos.BooksFileDto;
 import com.codigojava.biblioteca.dtos.BooksPublicDto;
 import com.codigojava.biblioteca.dtos.BooksPublicIsbnDto;
 import com.codigojava.biblioteca.entities.BooksEntity;
+import com.codigojava.biblioteca.exceptions.BdInternalException;
 import com.codigojava.biblioteca.exceptions.BdNotFoundException;
 import com.codigojava.biblioteca.exceptions.BdNotSaveException;
 import com.codigojava.biblioteca.mappers.BooksMapper;
@@ -164,6 +165,47 @@ public class BooksServiceImp implements BooksService {
             log.warn("Save for books - Error saving book. Possible cause: {}", e.getMessage());
             throw new BdNotSaveException("POST - Error save book.  Possible cause: BD inconsistency or internal failure.");
         }
+    }
+
+    public BooksDto updateById(final String isbn, final BooksRecordDh bookDh) {
+
+        BooksEntity existingBook = booksRepository.findById(isbn)
+                .orElseThrow(() -> new BdNotFoundException("PUT - No book not found with isbn: " + isbn));
+
+        if (bookDh.isbn() != null && !bookDh.isbn().equals(isbn)) {
+            throw new BdNotSaveException(
+                    "PUT - Parameters are incorrect: isbn " + bookDh.isbn() + " is different from id " + isbn);
+        }
+
+        // MapStruct copia campos simples
+        booksMapper.updateEntityFromDh(bookDh, existingBook);
+
+        // Asignar relaciones ManyToOne
+        existingBook.setAuthor(
+                authorsRepository.findById(bookDh.authorId())
+                        .orElseThrow(() -> new BdNotFoundException("PUT - Author not found with id: " + bookDh.authorId()))
+        );
+
+        existingBook.setPublisher(
+                publishersRepository.findById(bookDh.publisherId())
+                        .orElseThrow(() -> new BdNotFoundException("PUT - Publisher not found with id: " + bookDh.publisherId()))
+        );
+
+        existingBook.setCategory(
+                categoriesRepository.findById(bookDh.categoryId())
+                        .orElseThrow(() -> new BdNotFoundException("PUT - Category not found with id: " + bookDh.categoryId()))
+        );
+
+        try {
+            final BooksEntity updatedBook = this.booksRepository.save(existingBook);
+
+            return this.booksMapper.asDto(updatedBook);
+        } catch (Exception e) {
+            throw new BdInternalException(
+                    "PUT - Error saving book. Possible cause: DB inconsistency or internal failure."
+            );
+        }
+
     }
 
 }
