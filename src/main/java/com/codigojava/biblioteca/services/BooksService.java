@@ -5,6 +5,7 @@ import com.codigojava.biblioteca.dtos.BooksDto;
 import com.codigojava.biblioteca.dtos.BooksFileDto;
 import com.codigojava.biblioteca.dtos.BooksPublicDto;
 import com.codigojava.biblioteca.dtos.BooksPublicIsbnDto;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -33,7 +34,9 @@ public interface BooksService {
     // Método POST - Crear un libro
     BooksDto save(BooksRecordDh bookDh);
 
-    // Método PUT - Modificar un libro y subir ficheros (portada y PDF)
+    // Método PUT - Modificar un libro y NO sube ficheros (portada y PDF)
     BooksDto updateById(String ibsn, BooksRecordDh bookDh);
 
+    // Método PUT - Añadir ficheros portada y libro
+    public BooksDto updateFiles(String isbn, MultipartFile bookCover, MultipartFile bookFile);
 }
