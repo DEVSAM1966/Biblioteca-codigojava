@@ -31,3 +31,12 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Directorio de ficheros subidos
+uploads/
+
+# Extensiones de ficheros subidos
+*.jpg
+*.jpeg
+*.pdf
+

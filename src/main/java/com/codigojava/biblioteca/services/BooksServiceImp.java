@@ -14,6 +14,10 @@ import com.codigojava.biblioteca.repositories.AuthorsRepository;
 import com.codigojava.biblioteca.repositories.BooksRepository;
 import com.codigojava.biblioteca.repositories.CategoriesRepository;
 import com.codigojava.biblioteca.repositories.PublishersRepository;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import jakarta.validation.constraints.NotEmpty;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +26,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -46,6 +52,9 @@ public class BooksServiceImp implements BooksService {
 
     @NonNull
     private final BooksMapper booksMapper;
+
+    @NonNull
+    private final FileStorageService fileStorageService;
 
     @Override
     public List<BooksDto> findAll() {
@@ -86,6 +95,7 @@ public class BooksServiceImp implements BooksService {
         }
     }
 
+    @Override
     public BooksDto findById(final String isbn) {
         final Optional<BooksEntity> bookOptional = this.booksRepository.findById(isbn);
 
@@ -96,6 +106,7 @@ public class BooksServiceImp implements BooksService {
         }
     }
 
+    @Override
     public BooksPublicIsbnDto findByIdPublic(final String isbn) {
         final Optional<BooksEntity> bookOptional = this.booksRepository.findById(isbn);
 
@@ -106,6 +117,7 @@ public class BooksServiceImp implements BooksService {
         }
     }
 
+    @Override
     public BooksPublicIsbnDto findByIdPrivate(final String isbn) {
         final Optional<BooksEntity> bookOptional = this.booksRepository.findById(isbn);
 
@@ -116,6 +128,7 @@ public class BooksServiceImp implements BooksService {
         }
     }
 
+    @Override
     public List<BooksPublicDto> findByName(final String name) {
         final List<BooksEntity> booksList =
                 this.booksRepository.findByTitleContainingIgnoreCase(name);
@@ -128,6 +141,7 @@ public class BooksServiceImp implements BooksService {
         }
     }
 
+    @Override
     public BooksFileDto findFileById(final String isbn) {
         final Optional<BooksEntity> bookOptional = this.booksRepository.findById(isbn);
 
@@ -138,6 +152,7 @@ public class BooksServiceImp implements BooksService {
         }
     }
 
+    @Override
     public BooksDto save(final BooksRecordDh bookDh) {
         final BooksEntity books = this.booksMapper.asEntity(bookDh);
 
@@ -167,6 +182,7 @@ public class BooksServiceImp implements BooksService {
         }
     }
 
+    @Override
     public BooksDto updateById(final String isbn, final BooksRecordDh bookDh) {
 
         BooksEntity existingBook = booksRepository.findById(isbn)
@@ -206,6 +222,66 @@ public class BooksServiceImp implements BooksService {
             );
         }
 
+    }
+
+    @Override
+    public BooksDto updateFiles(String isbn, MultipartFile bookCover, MultipartFile bookFile) {
+
+        // 1. Validar que el libro existe
+        BooksEntity book = booksRepository.findById(isbn)
+                .orElseThrow(() -> new BdNotFoundException("PUT FILES -No book found with isbn: " + isbn));
+
+        // 2. Validar que vienen los dos ficheros o ninguno
+        if ((bookCover == null || bookCover.isEmpty()) ||
+                (bookFile == null || bookFile.isEmpty())) {
+            throw new BdNotSaveException("PUT FILES - Both cover and book file must be provided.");
+        }
+
+        // 3. Asegurar que los directorios existen
+        fileStorageService.ensureDirectories();
+
+        // 4. Borrar ficheros antiguos (si existen)
+        if (book.getBookCover() != null) {
+            Path oldCoverPath = Paths.get(book.getBookCover());
+            fileStorageService.deleteIfExists(oldCoverPath);
+        }
+
+        if (book.getBookFile() != null) {
+            Path oldFilePath = Paths.get(book.getBookFile());
+            fileStorageService.deleteIfExists(oldFilePath);
+        }
+
+        // 5. Validar extensiones
+        fileStorageService.validateCoverExtension(bookCover.getOriginalFilename());
+        fileStorageService.validateBookExtension(bookFile.getOriginalFilename());
+
+        // 6. Construcción de nombres
+        String coverFileName = isbn + "_" + bookCover.getOriginalFilename();
+        String pdfFileName = isbn + "_" + bookFile.getOriginalFilename();
+
+
+        // 7. Guardar físico de los nuevos ficheros
+        String savedCoverPath = fileStorageService.saveFile(
+                bookCover,
+                fileStorageService.getCoverDir(),
+                coverFileName
+        );
+
+        String savedPdfPath = fileStorageService.saveFile(
+                bookFile,
+                fileStorageService.getFileDir(),
+                pdfFileName
+        );
+
+
+        // 8. Actualizar la entidad con las nuevas rutas
+        book.setBookCover(savedCoverPath);
+        book.setBookFile(savedPdfPath);
+
+
+        // 9. Guardar en BD y devolver DTO
+        BooksEntity saved = booksRepository.save(book);
+        return booksMapper.asDto(saved);
     }
 
 }
