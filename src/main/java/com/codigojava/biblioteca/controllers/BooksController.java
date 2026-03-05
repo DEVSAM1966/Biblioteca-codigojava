@@ -133,12 +133,21 @@ public class BooksController {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public BooksDto updateBookFiles(
+    public ResponseEntity<BooksDto> updateBookFiles(
             @PathVariable final String isbn,
             @RequestPart("bookCover") final MultipartFile bookCover,
             @RequestPart("bookFile") final MultipartFile bookFile
     ) {
-        return booksService.updateFiles(isbn, bookCover, bookFile);
+        return ResponseEntity.ok(this.booksService.updateFiles(isbn, bookCover, bookFile));
+    }
+
+    @DeleteMapping(
+            value = "/isbn/{isbn}",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<Boolean> deleteById(
+            @Valid @Size(min = 10, max = 13) @PathVariable final String isbn) {
+        return ResponseEntity.ok(this.booksService.deleteById(isbn));
     }
 
 }

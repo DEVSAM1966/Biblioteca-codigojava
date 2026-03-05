@@ -284,4 +284,32 @@ public class BooksServiceImp implements BooksService {
         return booksMapper.asDto(saved);
     }
 
+    public Boolean deleteById(final String isbn) {
+        final Optional<BooksEntity> existingBook = booksRepository.findById(isbn);
+
+        if (existingBook.isEmpty()) {
+            throw new BdNotFoundException("DELETE - No book found with isbn: " + isbn);
+        }
+
+        // Borrar ficheros del libro (si existen)
+        if (existingBook.get().getBookCover() != null) {
+            Path oldCoverPath = Paths.get(existingBook.get().getBookCover());
+            fileStorageService.deleteIfExists(oldCoverPath);
+        }
+
+        if (existingBook.get().getBookFile() != null) {
+            Path oldFilePath = Paths.get(existingBook.get().getBookFile());
+            fileStorageService.deleteIfExists(oldFilePath);
+        }
+
+        // Borrar el registro en BD
+        try {
+            this.booksRepository.deleteById(isbn);
+            return true;
+        } catch (Exception e) {
+            log.warn("Delete for books - Error deleting book. Possible cause: {}", e.getMessage());
+            throw new BdInternalException("DELETE - Error deleting book. Possible cause: table missing or DB inconsistency");
+        }
+    }
+
 }
