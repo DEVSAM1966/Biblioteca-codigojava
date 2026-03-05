@@ -396,6 +396,268 @@ paths:
                 example: true
 
 
+  ########################################
+  #                 BOOKS
+  ########################################
+
+  /books:
+    get:
+      tags: [Books]
+      summary: Obtener todos los libros (versión completa)
+      responses:
+        '200':
+          description: Lista completa de libros
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BooksDto'
+
+    post:
+      tags: [ Books ]
+      summary: Crear un nuevo libro
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BooksRecordDh'
+      responses:
+        '200':
+          description: Libro creado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BooksDto'
+
+  /books/public:
+    get:
+      tags: [Books]
+      summary: Obtener todos los libros (vista pública)
+      responses:
+        '200':
+          description: Lista pública de libros
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BooksPublicDto'
+
+  /books/private:
+    get:
+      tags: [Books]
+      summary: Obtener todos los libros (vista privada)
+      responses:
+        '200':
+          description: Lista privada de libros
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BooksPublicDto'
+
+  /books/isbn/{isbn}:
+    get:
+      tags: [Books]
+      summary: Buscar libro por ISBN (versión completa)
+      parameters:
+        - name: isbn
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 10
+            maxLength: 13
+            example: "9781234567895"
+      responses:
+        '200':
+          description: Libro encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BooksDto'
+
+    delete:
+      tags: [Books]
+      summary: Eliminar libro por ISBN (incluye borrado físico de ficheros)
+      parameters:
+        - name: isbn
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 10
+            maxLength: 13
+            example: "9781234567895"
+      responses:
+        '200':
+          description: Resultado de la eliminación
+          content:
+            application/json:
+              schema:
+                type: boolean
+                example: true
+
+    put:
+      tags: [Books]
+      summary: Actualizar libro por ISBN (sin subir ficheros)
+      parameters:
+        - name: isbn
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 10
+            maxLength: 13
+            example: "9781234567895"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BooksRecordDh'
+      responses:
+        '200':
+          description: Libro actualizado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BooksDto'
+
+  /books/public/isbn/{isbn}:
+    get:
+      tags: [Books]
+      summary: Buscar libro por ISBN (vista pública)
+      parameters:
+        - name: isbn
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "9781234567895"
+      responses:
+        '200':
+          description: Libro encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BooksPublicIsbnDto'
+
+  /books/private/isbn/{isbn}:
+    get:
+      tags: [Books]
+      summary: Buscar libro por ISBN (vista privada)
+      parameters:
+        - name: isbn
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "9781234567895"
+      responses:
+        '200':
+          description: Libro encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BooksPublicIsbnDto'
+
+  /books/title/{name}:
+    get:
+      tags: [Books]
+      summary: Buscar libros por título (contiene)
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+            maxLength: 55
+            example: "Fundación"
+      responses:
+        '200':
+          description: Lista de libros encontrados
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BooksPublicDto'
+
+  /books/private/file/{isbn}:
+    get:
+      tags: [Books]
+      summary: Obtener ruta del fichero PDF (privado)
+      parameters:
+        - name: isbn
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "9781234567895"
+      responses:
+        '200':
+          description: Ruta del fichero PDF
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BooksFileDto'
+
+  /books/public/file/{isbn}:
+    get:
+      tags: [Books]
+      summary: Obtener ruta del fichero PDF (público)
+      parameters:
+        - name: isbn
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "9781234567895"
+      responses:
+        '200':
+          description: Ruta del fichero PDF
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BooksFileDto'
+
+  /books/{isbn}/files:
+    put:
+      tags: [Books]
+      summary: Subir portada y fichero PDF de un libro
+      parameters:
+        - name: isbn
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "9781234567895"
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                bookCover:
+                  type: string
+                  format: binary
+                bookFile:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Ficheros actualizados correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BooksDto'
+
+
 components:
   schemas:
 
@@ -672,6 +934,118 @@ components:
           example: 0
         role:
           $ref: '#/components/schemas/RoleEnum'
+
+
+    ########################################
+    #              BOOKS SCHEMAS
+    ########################################
+
+    BooksDto:
+      type: object
+      properties:
+        isbn:
+          type: string
+          example: "9781234567895"
+        title:
+          type: string
+          example: "Orgullo y Prejuicio"
+        language:
+          type: string
+          example: "Español"
+        pages:
+          type: integer
+          example: 279
+        summary:
+          type: string
+          example: "Clásico romántico inglés."
+        editionDate:
+          type: string
+          example: "1813-01-01"
+        bookCover:
+          type: string
+          example: "uploads/cover/9781234567895_pride.jpg"
+        bookFile:
+          type: string
+          example: "uploads/file/9781234567895_pride.pdf"
+        authorId:
+          type: integer
+          example: 6
+        authors:
+          type: string
+          example: "Jane Austen"
+        publisherId:
+          type: integer
+          example: 1
+        categoryId:
+          type: integer
+          example: 5
+
+    BooksPublicDto:
+      type: object
+      properties:
+        isbn:
+          type: string
+        title:
+          type: string
+        summary:
+          type: string
+        bookCover:
+          type: string
+
+    BooksPublicIsbnDto:
+      type: object
+      properties:
+        isbn:
+          type: string
+        title:
+          type: string
+        summary:
+          type: string
+        bookCover:
+          type: string
+        pages:
+          type: integer
+        editionDate:
+          type: string
+
+    BooksFileDto:
+      type: object
+      properties:
+        bookFile:
+          type: string
+          example: "uploads/file/9781234567895_pride.pdf"
+
+    BooksRecordDh:
+      type: object
+      required:
+        - isbn
+        - authorId
+        - publisherId
+        - categoryId
+      properties:
+        isbn:
+          type: string
+          example: "9781234567895"
+        title:
+          type: string
+          maxLength: 55
+        pages:
+          type: integer
+        summary:
+          type: string
+          maxLength: 255
+        editionDate:
+          type: string
+        language:
+          type: string
+        authors:
+          type: string
+        authorId:
+          type: integer
+        publisherId:
+          type: integer
+        categoryId:
+          type: integer
 
 
     RoleEnum:
