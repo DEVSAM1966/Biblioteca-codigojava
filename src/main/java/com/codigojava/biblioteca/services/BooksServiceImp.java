@@ -225,9 +225,9 @@ public class BooksServiceImp implements BooksService {
     }
 
     @Override
-    public BooksDto updateFiles(String isbn, MultipartFile bookCover, MultipartFile bookFile) {
+    public BooksDto updateFiles(final String isbn, final MultipartFile bookCover, final MultipartFile bookFile) {
 
-        // 1. Validar que el libro existe
+        // 1. Validar que el libro existe por su ISBN
         BooksEntity book = booksRepository.findById(isbn)
                 .orElseThrow(() -> new BdNotFoundException("PUT FILES -No book found with isbn: " + isbn));
 

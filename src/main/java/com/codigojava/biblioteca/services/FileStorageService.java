@@ -1,5 +1,8 @@
 package com.codigojava.biblioteca.services;
 
+import com.codigojava.biblioteca.exceptions.BdInternalException;
+import com.codigojava.biblioteca.exceptions.BdNotSaveException;
+import com.codigojava.biblioteca.exceptions.DhValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,8 +25,8 @@ public class FileStorageService {
             Files.createDirectories(Paths.get(COVER_DIR));
             Files.createDirectories(Paths.get(FILE_DIR));
         } catch (IOException e) {
-            log.error("Error creating upload directories", e);
-            throw new RuntimeException("Could not create upload directories", e);
+            log.error("PUT FILES BOOKS - Error creating upload directories", e);
+            throw new BdInternalException("PUT FILES BOOKS - Could not create upload directories");
         }
     }
 
@@ -39,7 +42,7 @@ public class FileStorageService {
     public void validateCoverExtension(String filename) {
         String ext = getExtension(filename).toLowerCase();
         if (!ext.equals("jpg") && !ext.equals("jpeg")) {
-            throw new IllegalArgumentException("Cover file must be JPG or JPEG");
+            throw new BdNotSaveException("PUT FILES BOOKS - Cover file must be JPG or JPEG");
         }
     }
 
@@ -47,7 +50,7 @@ public class FileStorageService {
     public void validateBookExtension(String filename) {
         String ext = getExtension(filename).toLowerCase();
         if (!ext.equals("pdf")) {
-            throw new IllegalArgumentException("Book file must be PDF");
+            throw new BdNotSaveException("PUT FILES BOOKS - Book file must be PDF");
         }
     }
 
@@ -75,7 +78,7 @@ public class FileStorageService {
             return baseDir + "/" + targetFileName;
         } catch (IOException e) {
             log.error("Error saving file {}", targetFileName, e);
-            throw new RuntimeException("Error saving file " + targetFileName, e);
+            throw new BdNotSaveException("PUT FILES BOOKS - Error saving file");
         }
     }
 

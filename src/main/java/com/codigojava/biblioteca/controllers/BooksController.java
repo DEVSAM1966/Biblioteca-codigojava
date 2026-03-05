@@ -95,7 +95,16 @@ public class BooksController {
             value = "/private/file/{isbn}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<BooksFileDto> findFileById(
+    public ResponseEntity<BooksFileDto> findFileByIdPrivate(
+            @Valid @Size(min = 10, max = 13) @PathVariable final String isbn) {
+        return ResponseEntity.ok(this.booksService.findFileById(isbn));
+    }
+
+    @GetMapping(
+            value = "/public/file/{isbn}",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<BooksFileDto> findFileByIdPublic(
             @Valid @Size(min = 10, max = 13) @PathVariable final String isbn) {
         return ResponseEntity.ok(this.booksService.findFileById(isbn));
     }
@@ -126,8 +135,8 @@ public class BooksController {
     )
     public BooksDto updateBookFiles(
             @PathVariable final String isbn,
-            @RequestPart("bookCover") MultipartFile bookCover,
-            @RequestPart("bookFile") MultipartFile bookFile
+            @RequestPart("bookCover") final MultipartFile bookCover,
+            @RequestPart("bookFile") final MultipartFile bookFile
     ) {
         return booksService.updateFiles(isbn, bookCover, bookFile);
     }
