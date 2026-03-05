@@ -38,5 +38,9 @@ public interface BooksService {
     BooksDto updateById(String ibsn, BooksRecordDh bookDh);
 
     // Método PUT - Añadir ficheros portada y libro
-    public BooksDto updateFiles(String isbn, MultipartFile bookCover, MultipartFile bookFile);
+    BooksDto updateFiles(String isbn, MultipartFile bookCover, MultipartFile bookFile);
+
+    // Método DELETE - Borrar un libro a nivel de BD y borrado físico de ficheros.
+    Boolean deleteById(String isbn);
+
 }
