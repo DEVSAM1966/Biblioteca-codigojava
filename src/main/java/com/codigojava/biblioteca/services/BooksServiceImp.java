@@ -23,6 +23,9 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -70,29 +73,33 @@ public class BooksServiceImp implements BooksService {
     }
 
     @Override
-    public List<BooksPublicDto> findAllPublic() {
-        final List<BooksEntity> booksList =
-                this.booksRepository.findAll(Sort.by(Sort.Direction.ASC, "isbn"));
+    public Page<BooksPublicDto> findAllPublic(int page, int limit, Long authorId, Long categoryId) {
+        Pageable pageable = PageRequest.of(page - 1, limit, Sort.by("title").ascending());
 
-        if (CollectionUtils.isEmpty(booksList)) {
-            log.warn("FindAllPublic for books - There are not books in database");
-            return Collections.emptyList();
-        } else {
-            return this.booksMapper.asPublicDtoList(booksList);
+        Page<BooksEntity> booksPage =
+                booksRepository.findAllWithFilters(authorId, categoryId, pageable);
+
+        if (booksPage.isEmpty()) {
+            log.warn("FindAllPublic - No books found with given filters");
+            return Page.empty();
         }
+
+        return booksPage.map(booksMapper::asPublicDto);
     }
 
     @Override
-    public List<BooksPublicDto> findAllPrivate() {
-        final List<BooksEntity> booksList =
-                this.booksRepository.findAll(Sort.by(Sort.Direction.ASC, "isbn"));
+    public Page<BooksPublicDto> findAllPrivate(int page, int limit, Long authorId, Long categoryId) {
+        Pageable pageable = PageRequest.of(page - 1, limit, Sort.by("title").ascending());
 
-        if (CollectionUtils.isEmpty(booksList)) {
-            log.warn("FindAllPrivate for books - There are not books in database");
-            return Collections.emptyList();
-        } else {
-            return this.booksMapper.asPrivateDtoList(booksList);
+        Page<BooksEntity> booksPage =
+                booksRepository.findAllWithFilters(authorId, categoryId, pageable);
+
+        if (booksPage.isEmpty()) {
+            log.warn("FindAllPrivate - No books found with given filters");
+            return Page.empty();
         }
+
+        return booksPage.map(booksMapper::asPublicDto);
     }
 
     @Override

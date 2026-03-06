@@ -14,6 +14,7 @@ import jakarta.validation.constraints.Size;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -43,16 +44,26 @@ public class BooksController {
             value = "/public",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<List<BooksPublicDto>> findAllPublic() {
-        return ResponseEntity.ok(this.booksService.findAllPublic());
+    public ResponseEntity<Page<BooksPublicDto>> findAllPublic(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int limit,
+            @RequestParam(required = false) Long authorId,
+            @RequestParam(required = false) Long categoryId
+    ) {
+        return ResponseEntity.ok(this.booksService.findAllPublic(page, limit, authorId, categoryId));
     }
 
     @GetMapping(
             value = "/private",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<List<BooksPublicDto>> findAllPrivate() {
-        return ResponseEntity.ok(this.booksService.findAllPrivate());
+    public ResponseEntity<Page<BooksPublicDto>> findAllPrivate(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int limit,
+            @RequestParam(required = false) Long authorId,
+            @RequestParam(required = false) Long categoryId
+    ) {
+        return ResponseEntity.ok(this.booksService.findAllPrivate(page, limit, authorId, categoryId));
     }
 
     @GetMapping(
