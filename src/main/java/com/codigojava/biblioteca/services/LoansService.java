@@ -8,4 +8,6 @@ public interface LoansService {
 
     List<LoansDto> findAll();
 
+    LoansDto findById(Integer id);
+
 }
