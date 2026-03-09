@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,7 +36,7 @@ public class LoansController {
     }
 
     @GetMapping(value = "/id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<LoansDto> findById(@PathVariable Integer id) {
+    public ResponseEntity<LoansDto> findById(@Validated @PathVariable final Integer id) {
 
 
         if (id == null || id <= 0) {
@@ -43,6 +44,16 @@ public class LoansController {
         }
 
         return ResponseEntity.ok(loansService.findById(id));
+    }
+
+    @GetMapping(value = "/userid/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<LoansDto>> findByUserId(@Validated @PathVariable final Integer id) {
+
+        if (id == null || id <= 0) {
+            throw new DhValidationException("id", "The id must be a positive integer greater than 0");
+        }
+
+        return ResponseEntity.ok(this.loansService.findByUserId(id));
     }
 
 }

@@ -51,4 +51,16 @@ public class LoansServiceImp implements LoansService {
         }
     }
 
+    @Override
+    public List<LoansDto> findByUserId(final Integer id) {
+        final List<LoansEntity> loansList = this.loansRepository.findByUser_UserId(id);
+
+        if (CollectionUtils.isEmpty(loansList)) {
+            log.warn("FindByUserId for Loans - There are not loans in database");
+            return Collections.emptyList();
+        } else {
+            return this.loansMapper.asDtoList(loansList);
+        }
+    }
+
 }
