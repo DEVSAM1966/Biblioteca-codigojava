@@ -10,4 +10,5 @@ public interface LoansService {
 
     LoansDto findById(Integer id);
 
+    List<LoansDto> findByUserId(Integer id);
 }
