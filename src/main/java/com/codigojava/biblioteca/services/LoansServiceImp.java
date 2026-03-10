@@ -56,7 +56,19 @@ public class LoansServiceImp implements LoansService {
         final List<LoansEntity> loansList = this.loansRepository.findByUser_UserId(id);
 
         if (CollectionUtils.isEmpty(loansList)) {
-            log.warn("FindByUserId for Loans - There are not loans in database");
+            log.warn("FindByUserId for Loans - There are not loans in database con userId: {}", id);
+            return Collections.emptyList();
+        } else {
+            return this.loansMapper.asDtoList(loansList);
+        }
+    }
+
+    @Override
+    public List<LoansDto> findByIsbn(final String isbn) {
+        final  List<LoansEntity> loansList = this.loansRepository.findByIsbn(isbn);
+
+        if (CollectionUtils.isEmpty(loansList)) {
+            log.warn("FindByIsbn for loans - There are not loans in database con isbn: {}", isbn);
             return Collections.emptyList();
         } else {
             return this.loansMapper.asDtoList(loansList);

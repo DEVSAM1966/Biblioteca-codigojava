@@ -56,4 +56,10 @@ public class LoansController {
         return ResponseEntity.ok(this.loansService.findByUserId(id));
     }
 
+    @GetMapping(value = "/isbn/{isbn}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<LoansDto>> findByIsbn(@Validated @PathVariable final String isbn) {
+
+        return ResponseEntity.ok(this.loansService.findByIsbn(isbn));
+    }
+
 }
