@@ -1,5 +1,6 @@
 package com.codigojava.biblioteca.controllers;
 
+import com.codigojava.biblioteca.dataholders.LoansRecordDh;
 import com.codigojava.biblioteca.dtos.LoansDto;
 import com.codigojava.biblioteca.exceptions.DhValidationException;
 import com.codigojava.biblioteca.services.LoansService;
@@ -11,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -60,6 +58,11 @@ public class LoansController {
     public ResponseEntity<List<LoansDto>> findByIsbn(@Validated @PathVariable final String isbn) {
 
         return ResponseEntity.ok(this.loansService.findByIsbn(isbn));
+    }
+
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<LoansDto> save(@Validated @RequestBody final LoansRecordDh loansRecordDh) {
+        return ResponseEntity.ok(loansService.save(loansRecordDh));
     }
 
 }
