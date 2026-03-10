@@ -1,17 +1,21 @@
 package com.codigojava.biblioteca.services;
 
+import com.codigojava.biblioteca.dataholders.LoansRecordDh;
 import com.codigojava.biblioteca.dtos.LoansDto;
 import com.codigojava.biblioteca.entities.LoansEntity;
 import com.codigojava.biblioteca.exceptions.BdNotFoundException;
+import com.codigojava.biblioteca.exceptions.BdNotSaveException;
 import com.codigojava.biblioteca.mappers.LoansMapper;
 import com.codigojava.biblioteca.repositories.LoansRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -72,6 +76,32 @@ public class LoansServiceImp implements LoansService {
             return Collections.emptyList();
         } else {
             return this.loansMapper.asDtoList(loansList);
+        }
+    }
+
+    @Override
+    public LoansDto save(final LoansRecordDh loansCreateDh) {
+        final LoansEntity loans = this.loansMapper.asEntity(loansCreateDh);
+
+        // Si loanDate viene null → asignar fecha actual
+        if (loans.getLoanDate() == null) {
+            loans.setLoanDate(LocalDate.now());
+        }
+
+        // Si returnDate viene null → asignar loanDate + 7 días
+        if (loans.getReturnDate() == null) {
+            loans.setReturnDate(loans.getLoanDate().plusDays(7));
+        }
+
+        try {
+            final LoansEntity loanSaved = this.loansRepository.save(loans);
+            return loansMapper.asDto(loanSaved);
+        } catch (DataIntegrityViolationException e) {
+            log.warn("Save for loans - Integrity violation: {}", e.getMessage());
+            throw new BdNotSaveException("POST - Error saving loan. Possible cause: duplicated data or constraint violation.");
+        } catch (Exception e) {
+            log.warn("Save for loans - Error saving loan. Possible cause: {}", e.getMessage());
+            throw new BdNotSaveException("POST - Error save loan.  Possible cause: BD inconsistency or internal failure.");
         }
     }
 

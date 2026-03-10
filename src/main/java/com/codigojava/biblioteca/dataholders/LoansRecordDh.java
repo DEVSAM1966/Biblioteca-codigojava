@@ -11,10 +11,10 @@ import java.time.LocalDate;
 public record LoansRecordDh(
 
         @JsonFormat(pattern = "yyyy-MM-dd")
-        LocalDate loansDate,
+        LocalDate loanDate,
 
         @JsonFormat(pattern = "yyyy-MM-dd")
-        LocalDate loanReturn,
+        LocalDate returnDate,
 
         @Min(value = 1, message = "User ID must be a number positive")
         Integer userId,

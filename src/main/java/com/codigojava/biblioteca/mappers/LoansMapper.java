@@ -14,6 +14,10 @@ import java.util.List;
 )
 public interface LoansMapper {
 
+    @Mapping(target = "loanDate", source = "loanDate")
+    @Mapping(target = "returnDate", source = "returnDate")
+    @Mapping(target = "user.userId", source = "userId")
+    @Mapping(target = "book.isbn", source = "isbn")
     LoansEntity asEntity(LoansRecordDh loansDh);
 
     List<LoansEntity> asEntityList(List<LoansRecordDh> loansDh);
