@@ -65,4 +65,14 @@ public class LoansController {
         return ResponseEntity.ok(loansService.save(loansRecordDh));
     }
 
+    @DeleteMapping(value = "/id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Boolean> deleteById(@Validated @PathVariable final Integer id) {
+
+        if (id == null || id <= 0) {
+            throw new DhValidationException("id", "The id must be a positive integer greater than 0");
+        }
+
+        return ResponseEntity.ok(this.loansService.deleteById(id));
+    }
+
 }

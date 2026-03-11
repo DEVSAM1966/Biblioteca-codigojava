@@ -3,6 +3,7 @@ package com.codigojava.biblioteca.services;
 import com.codigojava.biblioteca.dataholders.LoansRecordDh;
 import com.codigojava.biblioteca.dtos.LoansDto;
 import com.codigojava.biblioteca.entities.LoansEntity;
+import com.codigojava.biblioteca.exceptions.BdInternalException;
 import com.codigojava.biblioteca.exceptions.BdNotFoundException;
 import com.codigojava.biblioteca.exceptions.BdNotSaveException;
 import com.codigojava.biblioteca.mappers.LoansMapper;
@@ -103,6 +104,24 @@ public class LoansServiceImp implements LoansService {
             log.warn("Save for loans - Error saving loan. Possible cause: {}", e.getMessage());
             throw new BdNotSaveException("POST - Error save loan.  Possible cause: BD inconsistency or internal failure.");
         }
+    }
+
+    @Override
+    public Boolean deleteById(final Integer id) {
+        final Optional<LoansEntity> loansOptional = this.loansRepository.findById(id);
+
+        if (loansOptional.isEmpty()) {
+            throw new BdNotFoundException("DELETE - No loans found with id: " + id);
+        }
+
+        try {
+            this.loansRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            log.warn("Delete for loans - Error deleting loan. Possible cause: {}", e.getMessage());
+            throw new BdInternalException( "DELETE - Error deleting loan. Possible cause: table missing or DB inconsistency.");
+        }
+
     }
 
 }

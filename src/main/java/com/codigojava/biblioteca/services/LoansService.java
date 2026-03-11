@@ -17,4 +17,6 @@ public interface LoansService {
 
     LoansDto save(LoansRecordDh loansCreateDh);
 
+    Boolean deleteById(Integer id);
+
 }
