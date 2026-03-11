@@ -1,6 +1,7 @@
 package com.codigojava.biblioteca.services;
 
 import com.codigojava.biblioteca.dataholders.LoansRecordDh;
+import com.codigojava.biblioteca.dataholders.LoansUpdateRecordDh;
 import com.codigojava.biblioteca.dtos.LoansDto;
 import com.codigojava.biblioteca.entities.LoansEntity;
 import com.codigojava.biblioteca.exceptions.BdInternalException;
@@ -122,6 +123,36 @@ public class LoansServiceImp implements LoansService {
             throw new BdInternalException( "DELETE - Error deleting loan. Possible cause: table missing or DB inconsistency.");
         }
 
+    }
+
+    @Override
+    public LoansDto updateById(final Integer id, final LoansUpdateRecordDh loansDh) {
+        final LoansEntity existingLoan = this.loansRepository.findById(id)
+                .orElseThrow(() -> new BdNotFoundException("PUT - No loan found with id: " + id));
+
+        // Extraer valores de loansDh
+        LocalDate newLoanDate = loansDh.loanDate();
+        LocalDate newReturnDate = loansDh.returnDate();
+
+        // Actualizar si vienen valores
+        if (newLoanDate != null) {
+            existingLoan.setLoanDate(newLoanDate);
+        }
+
+        if (newReturnDate != null) {
+            existingLoan.setReturnDate(newReturnDate);
+        }
+
+        // Guardamos cambios
+        try {
+            final LoansEntity updatedLoan = this.loansRepository.save(existingLoan);
+
+            return this.loansMapper.asDto(updatedLoan);
+        } catch (Exception e) {
+            throw new BdInternalException(
+                    "PUT - Error saving loan. Possible cause: DB inconsistency or internal failure."
+            );
+        }
     }
 
 }

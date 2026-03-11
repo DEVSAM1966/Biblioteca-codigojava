@@ -1,6 +1,7 @@
 package com.codigojava.biblioteca.controllers;
 
 import com.codigojava.biblioteca.dataholders.LoansRecordDh;
+import com.codigojava.biblioteca.dataholders.LoansUpdateRecordDh;
 import com.codigojava.biblioteca.dtos.LoansDto;
 import com.codigojava.biblioteca.exceptions.DhValidationException;
 import com.codigojava.biblioteca.services.LoansService;
@@ -73,6 +74,16 @@ public class LoansController {
         }
 
         return ResponseEntity.ok(this.loansService.deleteById(id));
+    }
+
+    @PutMapping(value = "/id/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<LoansDto> updateById(@Validated @PathVariable final Integer id, @Validated @RequestBody final LoansUpdateRecordDh loansDh) {
+
+        if (id == null || id <= 0) {
+            throw new DhValidationException("id", "The id must be a positive integer greater than 0");
+        }
+
+        return ResponseEntity.ok(this.loansService.updateById(id, loansDh));
     }
 
 }

@@ -1,6 +1,7 @@
 package com.codigojava.biblioteca.services;
 
 import com.codigojava.biblioteca.dataholders.LoansRecordDh;
+import com.codigojava.biblioteca.dataholders.LoansUpdateRecordDh;
 import com.codigojava.biblioteca.dtos.LoansDto;
 
 import java.util.List;
@@ -18,5 +19,7 @@ public interface LoansService {
     LoansDto save(LoansRecordDh loansCreateDh);
 
     Boolean deleteById(Integer id);
+
+    LoansDto updateById(Integer id, LoansUpdateRecordDh loansUpdateRecordDh);
 
 }
