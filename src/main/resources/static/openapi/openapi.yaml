@@ -14,6 +14,9 @@ tags:
   - name: Users
     description: Endpoints para gestionar usuarios
 
+  - name: Loans
+    description: Endpoints para gestionar préstamos de libros
+
 paths:
 
   ########################################
@@ -657,6 +660,148 @@ paths:
               schema:
                 $ref: '#/components/schemas/BooksDto'
 
+  ########################################
+  #                 LOANS
+  ########################################
+
+  /loans:
+    get:
+      tags: [Loans]
+      summary: Obtener todos los préstamos
+      responses:
+        '200':
+          description: Lista de préstamos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LoansDto'
+
+    post:
+      tags: [Loans]
+      summary: Crear un nuevo préstamo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoansRecordDh'
+      responses:
+        '200':
+          description: Préstamo creado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoansDto'
+
+
+  /loans/id/{id}:
+    get:
+      tags: [Loans]
+      summary: Buscar préstamo por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 5
+      responses:
+        '200':
+          description: Préstamo encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoansDto'
+
+    delete:
+      tags: [Loans]
+      summary: Eliminar préstamo por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 5
+      responses:
+        '200':
+          description: Resultado de la eliminación
+          content:
+            application/json:
+              schema:
+                type: boolean
+                example: true
+
+    put:
+      tags: [Loans]
+      summary: Actualizar préstamo por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 5
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoansUpdateRecordDh'
+      responses:
+        '200':
+          description: Préstamo actualizado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoansDto'
+
+
+  /loans/userid/{id}:
+    get:
+      tags: [Loans]
+      summary: Buscar préstamos por ID de usuario
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 3
+      responses:
+        '200':
+          description: Lista de préstamos del usuario
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LoansDto'
+
+
+  /loans/isbn/{isbn}:
+    get:
+      tags: [Loans]
+      summary: Buscar préstamos por ISBN
+      parameters:
+        - name: isbn
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "9781234567895"
+      responses:
+        '200':
+          description: Lista de préstamos del libro
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LoansDto'
+
 
 components:
   schemas:
@@ -1046,6 +1191,72 @@ components:
           type: integer
         categoryId:
           type: integer
+
+
+    ########################################
+    #              LOANS SCHEMAS
+    ########################################
+
+    LoansDto:
+      type: object
+      properties:
+        loanId:
+          type: integer
+          example: 12
+        loanDate:
+          type: string
+          format: date
+          example: "2026-03-10"
+        returnDate:
+          type: string
+          format: date
+          example: "2026-03-17"
+        userId:
+          type: integer
+          example: 9
+        isbn:
+          type: string
+          example: "9781234567895"
+
+    LoansRecordDh:
+      type: object
+      required:
+        - userId
+        - isbn
+      properties:
+        loanDate:
+          type: string
+          format: date
+          description: Fecha del préstamo. Si no se envía, se asigna la fecha actual.
+          example: "2026-03-10"
+        returnDate:
+          type: string
+          format: date
+          description: Fecha de devolución. Si no se envía, se asigna loanDate + 7 días.
+          example: "2026-03-17"
+        userId:
+          type: integer
+          minimum: 1
+          example: 9
+        isbn:
+          type: string
+          minLength: 10
+          maxLength: 13
+          example: "9781234567895"
+
+    LoansUpdateRecordDh:
+      type: object
+      properties:
+        loanDate:
+          type: string
+          format: date
+          description: Nueva fecha del préstamo
+          example: "2026-03-12"
+        returnDate:
+          type: string
+          format: date
+          description: Nueva fecha de devolución
+          example: "2026-03-19"
 
 
     RoleEnum:
