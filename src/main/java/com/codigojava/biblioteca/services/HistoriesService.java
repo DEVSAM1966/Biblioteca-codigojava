@@ -1,5 +1,6 @@
 package com.codigojava.biblioteca.services;
 
+import com.codigojava.biblioteca.dataholders.HistoriesRecordDh;
 import com.codigojava.biblioteca.dtos.HistoriesDto;
 
 import java.util.List;
@@ -10,6 +11,8 @@ public interface HistoriesService {
 
     HistoriesDto findById(Integer id);
 
-    HistoriesDto findByLoanId(Integer id);
+    List<HistoriesDto> findByLoanId(Integer id);
+
+    HistoriesDto save(HistoriesRecordDh historiesDh);
 
 }
