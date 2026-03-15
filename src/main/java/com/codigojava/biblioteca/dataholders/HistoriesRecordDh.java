@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 public record HistoriesRecordDh(
 
-        @JsonFormat(pattern = "yyyy-mm-dd")
+        @JsonFormat(pattern = "yyyy-MM-dd")
         LocalDate dateFeedback,
 
         @Size(max = 255, message = "Feedback cannot exceed 255 characters")
