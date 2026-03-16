@@ -6,7 +6,10 @@ import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 
-public record HistoriesRecordDh(
+public record HistoriesUpdatedRecordDh(
+
+        @Min(value = 1, message = "History id must be a number positive")
+        Integer historyId,
 
         @JsonFormat(pattern = "yyyy-MM-dd")
         LocalDate dateFeedback,
@@ -16,5 +19,5 @@ public record HistoriesRecordDh(
 
         @Min(value = 1, message = "Loan id for history must be a number positive")
         Integer loanId
-)
-{}
+
+) {}

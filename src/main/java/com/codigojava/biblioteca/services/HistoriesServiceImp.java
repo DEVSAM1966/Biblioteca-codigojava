@@ -1,8 +1,10 @@
 package com.codigojava.biblioteca.services;
 
 import com.codigojava.biblioteca.dataholders.HistoriesRecordDh;
+import com.codigojava.biblioteca.dataholders.HistoriesUpdatedRecordDh;
 import com.codigojava.biblioteca.dtos.HistoriesDto;
 import com.codigojava.biblioteca.entities.HistoriesEntity;
+import com.codigojava.biblioteca.exceptions.BdInternalException;
 import com.codigojava.biblioteca.exceptions.BdNotFoundException;
 import com.codigojava.biblioteca.exceptions.BdNotSaveException;
 import com.codigojava.biblioteca.mappers.HistoriesMapper;
@@ -82,6 +84,48 @@ public class HistoriesServiceImp implements HistoriesService {
         } catch (Exception e) {
             log.warn("Save for histories - Error saving history. Possible cause: {}", e.getMessage());
             throw new BdNotSaveException("POST - Error save history.  Possible cause: BD inconsistency or internal failure.");
+        }
+    }
+
+    @Override
+    public HistoriesDto updateById(final Integer id, final HistoriesUpdatedRecordDh historiesDh) {
+        final HistoriesEntity existingHistory = this.historiesRepository.findById(id)
+                .orElseThrow(() -> new BdNotFoundException("PUT - No history found with id: " + id));
+
+        if (historiesDh.historyId() == null || historiesDh.historyId() != id) {
+            throw new BdNotSaveException(
+                    "PUT - Parameters are incorrect:" +
+                            " historyId " + historiesDh.historyId() + " is different from id " + id );
+        }
+
+        try {
+            historiesMapper.updateEntityFromDh(historiesDh, existingHistory);
+
+            final HistoriesEntity updatedHistory = this.historiesRepository.save(existingHistory);
+
+            return this.historiesMapper.asDto(updatedHistory);
+
+        } catch (Exception e) {
+            throw new BdInternalException(
+                    "PUT - Error saving history. Possible cause: DB inconsistency or internal failure."
+            );
+        }
+    }
+
+    @Override
+    public Boolean deleteById(final Integer id) {
+        final Optional<HistoriesEntity> existingHistories = this.historiesRepository.findById(id);
+
+        if (existingHistories.isEmpty()) {
+            throw new BdNotFoundException("DELETE - No histories found with id: " + id);
+        }
+
+        try {
+            this.historiesRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            log.warn("Delete for histories - Error deleting history. Possible cause: {}", e.getMessage());
+            throw new BdInternalException( "DELETE - Error deleting history. Possible cause: table missing or DB inconsistency." );
         }
     }
 
