@@ -17,6 +17,10 @@ tags:
   - name: Loans
     description: Endpoints para gestionar préstamos de libros
 
+  - name: Histories
+    description: Endpoints para gestionar historiales de feedback de préstamos
+
+
 paths:
 
   ########################################
@@ -802,6 +806,126 @@ paths:
                 items:
                   $ref: '#/components/schemas/LoansDto'
 
+  ########################################
+  #               HISTORIES
+  ########################################
+
+  /histories:
+    get:
+      tags: [Histories]
+      summary: Obtener todos los historiales de feedback
+      responses:
+        '200':
+          description: Lista de historiales
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HistoriesDto'
+
+    post:
+      tags: [Histories]
+      summary: Crear un nuevo historial de feedback
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HistoriesRecordDh'
+      responses:
+        '200':
+          description: Historial creado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoriesDto'
+
+
+  /histories/id/{id}:
+    get:
+      tags: [Histories]
+      summary: Buscar historial por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 3
+      responses:
+        '200':
+          description: Historial encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoriesDto'
+
+    delete:
+      tags: [Histories]
+      summary: Eliminar historial por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 3
+      responses:
+        '200':
+          description: Resultado de la eliminación
+          content:
+            application/json:
+              schema:
+                type: boolean
+                example: true
+
+    put:
+      tags: [Histories]
+      summary: Actualizar historial por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 3
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HistoriesUpdatedRecordDh'
+      responses:
+        '200':
+          description: Historial actualizado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoriesDto'
+
+
+  /histories/loans/{id}:
+    get:
+      tags: [Histories]
+      summary: Buscar historiales por ID de préstamo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 5
+      responses:
+        '200':
+          description: Lista de historiales asociados al préstamo
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HistoriesDto'
+
 
 components:
   schemas:
@@ -1257,6 +1381,68 @@ components:
           format: date
           description: Nueva fecha de devolución
           example: "2026-03-19"
+
+
+    ########################################
+    #             HISTORIES SCHEMAS
+    ########################################
+
+    HistoriesDto:
+      type: object
+      properties:
+        historyId:
+          type: integer
+          example: 7
+        dateFeedback:
+          type: string
+          format: date
+          example: "2024-06-01"
+        feedback:
+          type: string
+          example: "It es aterrador, me costó dormir después de leerlo."
+        loanId:
+          type: integer
+          example: 7
+
+    HistoriesRecordDh:
+      type: object
+      required:
+        - loanId
+      properties:
+        dateFeedback:
+          type: string
+          format: date
+          example: "2026-03-15"
+        feedback:
+          type: string
+          maxLength: 255
+          example: "Kafka en la orilla no me gustó."
+        loanId:
+          type: integer
+          minimum: 1
+          example: 14
+
+    HistoriesUpdatedRecordDh:
+      type: object
+      required:
+        - historyId
+      properties:
+        historyId:
+          type: integer
+          minimum: 1
+          example: 9
+        dateFeedback:
+          type: string
+          format: date
+          example: "2026-03-16"
+        feedback:
+          type: string
+          maxLength: 255
+          example: "Actualizo mi opinión: ahora me gustó más."
+        loanId:
+          type: integer
+          minimum: 1
+          example: 14
 
 
     RoleEnum:
