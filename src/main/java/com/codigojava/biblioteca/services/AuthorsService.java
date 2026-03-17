@@ -15,8 +15,8 @@ public interface AuthorsService {
 
     Boolean deleteById(Integer id);
 
-    AuthorsDto save(AuthorsRecordDh authorsDh);
+    AuthorsDto save(AuthorsCreatedDh authorsDh);
 
-    AuthorsDto updateById(Integer id, AuthorsUpdatedRecordDh authorsDh);
+    AuthorsDto updateById(Integer id, AuthorsUpdatedDh authorsDh);
 
 }

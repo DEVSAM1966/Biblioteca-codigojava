@@ -49,7 +49,7 @@ public class AuthorsServiceImp implements AuthorsService {
         final Optional<AuthorsEntity> authorOptional = this.authorsRepository.findById(id);
 
         if (authorOptional.isPresent()) {
-            return authorsMapper.asDto(authorOptional.get());
+            return this.authorsMapper.asDto(authorOptional.get());
         } else {
             throw new BdNotFoundException("GET - There is not authors in the database with the id: " + id);
         }
@@ -87,13 +87,13 @@ public class AuthorsServiceImp implements AuthorsService {
     }
 
     @Override
-    public AuthorsDto save(final AuthorsRecordDh authorsDh) {
+    public AuthorsDto save(final AuthorsCreatedDh authorsDh) {
 
         final AuthorsEntity authors = this.authorsMapper.asEntity(authorsDh);
 
         try {
             final AuthorsEntity authorsSaved = this.authorsRepository.save(authors);
-            return authorsMapper.asDto(authorsSaved);
+            return this.authorsMapper.asDto(authorsSaved);
         } catch (DataIntegrityViolationException e) {
             log.warn("Save for authors - Integrity violation: {}", e.getMessage());
             throw new BdNotSaveException("POST - Error saving author. Possible cause: duplicated data or constraint violation.");
@@ -105,7 +105,7 @@ public class AuthorsServiceImp implements AuthorsService {
     }
 
     @Override
-    public AuthorsDto updateById(final Integer id, final AuthorsUpdatedRecordDh authorsDh) {
+    public AuthorsDto updateById(final Integer id, final AuthorsUpdatedDh authorsDh) {
 
         final AuthorsEntity existingAuthor = this.authorsRepository.findById(id)
                 .orElseThrow(() -> new BdNotFoundException("PUT - No author found with id: " + id));

@@ -1,12 +1,9 @@
 package com.codigojava.biblioteca.dtos;
 
-import lombok.Data;
+public record AuthorsDto (
 
-@Data
-public class AuthorsDto {
+        Integer authorId,
 
-    private Integer authorId;
+        String nameAuthor
 
-    private String nameAuthor;
-
-}
+) {}
