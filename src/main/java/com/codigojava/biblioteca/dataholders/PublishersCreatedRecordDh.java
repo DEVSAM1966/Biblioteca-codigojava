@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public record PublishersRecordDh(
+public record PublishersCreatedRecordDh(
 
         @NotBlank(message = "Publisher name is mandatory")
         @Size(max = 100, message = "Publisher name cannot exceed 100 characters")

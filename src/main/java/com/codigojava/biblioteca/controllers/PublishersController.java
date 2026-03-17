@@ -22,4 +22,6 @@ public class PublishersController {
         List<PublishersDto> publishers = publishersService.findAll();
         return ResponseEntity.ok(publishers);
     }
+
+
 }
