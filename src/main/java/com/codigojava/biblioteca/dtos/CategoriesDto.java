@@ -1,14 +1,11 @@
 package com.codigojava.biblioteca.dtos;
 
-import lombok.Data;
+public record CategoriesDto(
 
-@Data
-public class CategoriesDto {
+        Integer categoryId,
 
-    private Integer categoryId;
+        String nameCategory,
 
-    private String nameCategory;
+        String subtopicCategory
 
-    private String subtopicCategory;
-
-}
+        ) {}

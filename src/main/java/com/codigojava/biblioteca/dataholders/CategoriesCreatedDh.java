@@ -1,11 +1,10 @@
 package com.codigojava.biblioteca.dataholders;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
-public record CategoriesUpdatedRecordDh(
-        @NotNull(message = "The categoryId cannot be null")
-        @Min(value = 1, message = "The categoryId must be greater than 0")
-        Integer categoryId,
+public record CategoriesCreatedDh(
         @NotBlank(message = "The category name cannot be empty")
         @Size(min = 3, max = 30, message = "The category name must be between 3 and 30 characters")
         @Pattern(

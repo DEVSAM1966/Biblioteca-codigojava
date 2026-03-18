@@ -1,7 +1,7 @@
 package com.codigojava.biblioteca.mappers;
 
-import com.codigojava.biblioteca.dataholders.CategoriesRecordDh;
-import com.codigojava.biblioteca.dataholders.CategoriesUpdatedRecordDh;
+import com.codigojava.biblioteca.dataholders.CategoriesCreatedDh;
+import com.codigojava.biblioteca.dataholders.CategoriesUpdatedDh;
 import com.codigojava.biblioteca.dtos.CategoriesDto;
 import com.codigojava.biblioteca.entities.CategoriesEntity;
 import org.mapstruct.Mapper;
@@ -15,11 +15,11 @@ import java.util.List;
 )
 public interface CategoriesMapper {
 
-    CategoriesEntity asEntity(CategoriesRecordDh categoriesDh);
+    CategoriesEntity asEntity(CategoriesCreatedDh categoriesDh);
 
-    void updateEntityFromDh(CategoriesUpdatedRecordDh categoriesDh, @MappingTarget CategoriesEntity entity);
+    void updateEntityFromDh(CategoriesUpdatedDh categoriesDh, @MappingTarget CategoriesEntity entity);
 
-    List<CategoriesEntity> asEntityList(List<CategoriesRecordDh> categoriesDhList);
+    List<CategoriesEntity> asEntityList(List<CategoriesCreatedDh> categoriesDhList);
 
     CategoriesDto asDto(CategoriesEntity categories);
 
