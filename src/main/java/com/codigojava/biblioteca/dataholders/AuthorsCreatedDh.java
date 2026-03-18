@@ -4,8 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+public record AuthorsCreatedDh(
 
-public record AuthorsRecordDh(
     @NotBlank(message = "The author name cannot be empty")
     @Size(min = 4, max = 100, message = "The author name must be between 4 and 100 characters")
     @Pattern(
@@ -13,4 +13,5 @@ public record AuthorsRecordDh(
             message = "The author name can only contain letters, spaces, dots, hyphens and apostrophes"
     )
     String nameAuthor
+
 ) {}

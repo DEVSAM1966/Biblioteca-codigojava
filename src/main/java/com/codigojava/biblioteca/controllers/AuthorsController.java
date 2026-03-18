@@ -5,12 +5,12 @@ import com.codigojava.biblioteca.dtos.AuthorsDto;
 import com.codigojava.biblioteca.exceptions.DhValidationException;
 import com.codigojava.biblioteca.services.AuthorsService;
 import com.codigojava.biblioteca.validators.DhValidator;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
+import com.codigojava.biblioteca.wrappers.ApiResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -31,49 +31,55 @@ public class AuthorsController {
     private DhValidator dhValidator;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<AuthorsDto>> findAll() {
-        return ResponseEntity.ok(this.authorsService.findAll());
+    public ResponseEntity<ApiResponse<List<AuthorsDto>>> findAll() {
+
+        return ResponseEntity.ok(new ApiResponse<>(this.authorsService.findAll()));
     }
 
     @GetMapping(value = "/id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AuthorsDto> findById(@Validated @PathVariable Integer id) {
+    public ResponseEntity<ApiResponse<AuthorsDto>> findById(@Validated @PathVariable Integer id) {
 
         if (id == null || id <= 0) {
             throw new DhValidationException("id", "The id must be a positive integer greater than 0");
         }
 
-        return ResponseEntity.ok(this.authorsService.findById(id));
+        return ResponseEntity.ok(new ApiResponse<>(this.authorsService.findById(id)));
     }
 
     @GetMapping(value = "/name/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<AuthorsDto>> findByName(@Validated @PathVariable String name) {
+    public ResponseEntity<ApiResponse<List<AuthorsDto>>> findByName(@Validated @PathVariable String name) {
 
         NameValidationGenericDh dh = new NameValidationGenericDh();
         dh.setName(name);
 
         dhValidator.validate(dh);
 
-        return ResponseEntity.ok(this.authorsService.findByName(name));
+        return ResponseEntity.ok(new ApiResponse<>(this.authorsService.findByName(name)));
     }
 
     @DeleteMapping(value = "/id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Boolean> deleteById(@Validated @PathVariable final Integer id) {
+    public ResponseEntity<ApiResponse<Boolean>> deleteById(@Validated @PathVariable final Integer id) {
 
         if (id == null || id <= 0) {
             throw new DhValidationException("id", "The id must be a positive integer greater than 0");
         }
 
-        return ResponseEntity.ok(this.authorsService.deleteById(id));
+        return ResponseEntity.ok(new ApiResponse<>(this.authorsService.deleteById(id)));
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AuthorsDto> create(@Validated @RequestBody final AuthorsRecordDh authorsDh) {
-        return ResponseEntity.ok(this.authorsService.save(authorsDh));
+    public ResponseEntity<ApiResponse<AuthorsDto>> save(@Validated @RequestBody final AuthorsCreatedDh authorsDh) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse<>(this.authorsService.save(authorsDh)));
     }
 
     @PutMapping(value = "/id/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AuthorsDto> updateById(@Validated @PathVariable @Min(1) final Integer id, @Valid @RequestBody final AuthorsUpdatedRecordDh authorsDh) {
-        return ResponseEntity.ok(this.authorsService.updateById(id, authorsDh));
+    public ResponseEntity<ApiResponse<AuthorsDto>> updateById(@Validated @PathVariable final Integer id, @Validated @RequestBody final AuthorsUpdatedDh authorsDh) {
+
+        if (id == null || id <= 0) {
+            throw new DhValidationException("id", "The id must be a positive integer greater than 0");
+        }
+
+        return ResponseEntity.ok(new ApiResponse<>(this.authorsService.updateById(id, authorsDh)));
     }
 
 }
