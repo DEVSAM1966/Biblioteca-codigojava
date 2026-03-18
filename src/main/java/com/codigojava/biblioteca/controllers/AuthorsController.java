@@ -6,12 +6,11 @@ import com.codigojava.biblioteca.exceptions.DhValidationException;
 import com.codigojava.biblioteca.services.AuthorsService;
 import com.codigojava.biblioteca.validators.DhValidator;
 import com.codigojava.biblioteca.wrappers.ApiResponse;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -70,7 +69,7 @@ public class AuthorsController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse<AuthorsDto>> save(@Validated @RequestBody final AuthorsCreatedDh authorsDh) {
-        return ResponseEntity.ok(new ApiResponse<>(this.authorsService.save(authorsDh)));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse<>(this.authorsService.save(authorsDh)));
     }
 
     @PutMapping(value = "/id/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

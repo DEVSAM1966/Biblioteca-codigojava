@@ -51,7 +51,7 @@ paths:
             schema:
               $ref: '#/components/schemas/AuthorsCreatedDh'
       responses:
-        '200':
+        '201':
           description: Autor creado correctamente
           content:
             application/json:
