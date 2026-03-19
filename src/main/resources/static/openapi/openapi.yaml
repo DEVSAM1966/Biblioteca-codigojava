@@ -170,7 +170,7 @@ paths:
             schema:
               $ref: '#/components/schemas/CategoriesCreatedDh'
       responses:
-        '200':
+        '201':
           description: Categoría creada correctamente
           content:
             application/json:
