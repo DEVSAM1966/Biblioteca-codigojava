@@ -1,6 +1,8 @@
 package com.codigojava.biblioteca.dtos;
 
 
+import com.codigojava.biblioteca.entities.PublishersEntity;
+
 public record PublishersDto(
         Integer publisherId,
         String namePublisher,
@@ -11,5 +13,7 @@ public record PublishersDto(
         String country,
         String phone,
         String notes
-) {}
+) {
+
+}
 

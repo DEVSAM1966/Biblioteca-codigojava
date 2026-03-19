@@ -37,4 +37,13 @@ public class PublishersServiceImp implements PublishersService {
             return this.publishersMapper.asDtoList(publishersList);
         }
     }
+
+    @Override
+    public PublishersDto createPublisher(PublishersEntity publishers) {
+        // Repository se comunica con la BD y guarda
+        PublishersEntity saved = publishersRepository.save(publishers);
+
+        // Mapper convierte Entity → DTO para retornar
+        return publishersMapper.asDto(saved);
+    }
 }
