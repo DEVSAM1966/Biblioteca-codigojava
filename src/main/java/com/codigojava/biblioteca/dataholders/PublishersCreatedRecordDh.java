@@ -1,15 +1,17 @@
 package com.codigojava.biblioteca.dataholders;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 public record PublishersCreatedRecordDh(
+
+        @NotNull(message = "Publisher ID is mandatory")
+        @Positive(message = "Publisher ID must be a positive number")
+        Integer publisherId,
 
         @NotBlank(message = "Publisher name is mandatory")
         @Size(max = 100, message = "Publisher name cannot exceed 100 characters")
         @Pattern(
-                regexp = "^[\\p{L}0-9\\s\\.,'’\\-\u00B7]*$",
+                regexp = "^[\\p{L}0-9\\s99\\.,'’\\-\u00B7]*$",
                 message = "Publisher name contains invalid characters")
         String namePublisher,
 

@@ -1,14 +1,18 @@
 package com.codigojava.biblioteca.services;
 
+import com.codigojava.biblioteca.dataholders.PublishersCreatedRecordDh;
 import com.codigojava.biblioteca.dtos.PublishersDto;
 import com.codigojava.biblioteca.entities.PublishersEntity;
+import com.codigojava.biblioteca.exceptions.BdNotSaveException;
 import com.codigojava.biblioteca.mappers.PublishersMapper;
 import com.codigojava.biblioteca.repositories.PublishersRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
@@ -38,12 +42,18 @@ public class PublishersServiceImp implements PublishersService {
         }
     }
 
+    @Transactional
     @Override
-    public PublishersDto createPublisher(PublishersEntity publishers) {
-        // Repository se comunica con la BD y guarda
-        PublishersEntity saved = publishersRepository.save(publishers);
+    public PublishersDto createPublisher(PublishersCreatedRecordDh publisherDh) {
 
-        // Mapper convierte Entity → DTO para retornar
-        return publishersMapper.asDto(saved);
+        if (publishersRepository.existsById(publisherDh.publisherId())){
+            log.warn("CreatePublisher - PublisherId {} already exists", publisherDh.publisherId());
+            throw new BdNotSaveException("The publisherId " + publisherDh.publisherId() + " already exists.");
+        }
+            PublishersEntity publisherNew = publishersMapper.asEntity(publisherDh);
+            PublishersEntity saved = publishersRepository.save(publisherNew);
+            return publishersMapper.asDto(saved);
+
+
     }
 }
