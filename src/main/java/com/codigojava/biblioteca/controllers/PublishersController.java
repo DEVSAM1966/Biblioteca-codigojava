@@ -22,17 +22,15 @@ public class PublishersController {
     private final PublishersService publishersService;
 
 
-    @Transactional
+
     @PostMapping
     public ResponseEntity createPublisher (@RequestBody @Valid PublishersCreatedRecordDh create, UriComponentsBuilder uriComponentsBuilder){
 
         //crear un nuevo publisher
-        var publishers= new PublishersEntity(create);
 
         //metodo para crear en el service
-        PublishersDto created = publishersService.createPublisher(publishers);
-
-        var uri=uriComponentsBuilder.path("/publishers/{id}").buildAndExpand(publishers.getPublisherId()).toUri();
+        PublishersDto created = publishersService.createPublisher(create);
+        var uri=uriComponentsBuilder.path("/publishers/{id}").buildAndExpand(created.publisherId()).toUri();
 
         return ResponseEntity.created(uri).body(new ApiResponse<>(created));
 

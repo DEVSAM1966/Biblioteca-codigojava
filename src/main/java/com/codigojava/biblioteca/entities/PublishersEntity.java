@@ -3,6 +3,8 @@ import com.codigojava.biblioteca.dataholders.PublishersCreatedRecordDh;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,7 +18,8 @@ import lombok.NoArgsConstructor;
 public class PublishersEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull(message = "Publisher ID is mandatory")
+    @Positive(message = "Publisher ID must be a positive number")
     @Column(name = "publisher_id")
     private Integer publisherId;
 
@@ -60,16 +63,5 @@ public class PublishersEntity {
     @Column(name = "notes", length = 255)
     private String notes;
 
-    public PublishersEntity(PublishersCreatedRecordDh create) {
-        this.publisherId= null;
-        this.namePublisher= create.namePublisher();
-        this.address= create.address();
-        this.city= create.city();
-        this.province=create.province();
-        this.postalCode=create.postalCode();
-        this.country= create.country();
-        this.phone= create.phone();
-        this.notes= create.notes();
 
-    }
 }
