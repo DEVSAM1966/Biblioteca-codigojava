@@ -87,6 +87,30 @@ public class GlobalControlAdvice {
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(jakarta.validation.ConstraintViolationException.class)
+    public ResponseEntity<Object> handleConstraintViolation(jakarta.validation.ConstraintViolationException ex) {
+
+        Map<String, String> validationErrors = new HashMap<>();
+
+        ex.getConstraintViolations().forEach(v -> {
+            String field = v.getPropertyPath().toString();
+            validationErrors.put(field, v.getMessage());
+        });
+
+        ApiError apiError = ApiError.builder()
+                .message("Validation failed")
+                .description("Some fields are invalid")
+                .date(LocalDate.now())
+                .build();
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("validationErrors", validationErrors);
+        body.put("error", apiError);
+
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<Object> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
 
