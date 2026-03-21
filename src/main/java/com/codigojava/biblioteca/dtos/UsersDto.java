@@ -1,42 +1,37 @@
 package com.codigojava.biblioteca.dtos;
 
 import com.codigojava.biblioteca.entities.RoleEnum;
-import lombok.Data;
-
 import java.time.LocalDate;
-import java.util.Date;
 
-@Data
-public class UsersDto {
+public record UsersDto(
 
-   private Integer userId;
+        Integer userId,
 
-   private String fullname;
+        String fullname,
 
-   private String dni;
+        String dni,
 
-   private String address;
+        String address,
 
-   private String city;
+        String city,
 
-   private String province;
+        String province,
 
-   private String postalCode;
+        String postalCode,
 
-   private String country;
+        String country,
 
-   private String phone;
+        String phone,
 
-   private String email;
+        String email,
 
-   private String password;
+        String password,
 
-   private LocalDate registrationDate;
+        LocalDate registrationDate,
 
-   private boolean userDrop;
+        boolean userDrop,
 
-   private Integer daysDisciplinary;
-   
-   private RoleEnum role;
+        Integer daysDisciplinary,
 
-}
+        RoleEnum role
+) {}

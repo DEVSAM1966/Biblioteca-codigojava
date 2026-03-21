@@ -1,7 +1,7 @@
 package com.codigojava.biblioteca.services;
 
-import com.codigojava.biblioteca.dataholders.UsersRecordDh;
-import com.codigojava.biblioteca.dataholders.UsersUpdatedRecordDh;
+import com.codigojava.biblioteca.dataholders.UsersCreatedDh;
+import com.codigojava.biblioteca.dataholders.UsersUpdatedDh;
 import com.codigojava.biblioteca.dtos.UsersDto;
 
 import java.util.List;
@@ -16,9 +16,9 @@ public interface UsersService {
 
     Boolean deleteById(Integer id);
 
-    UsersDto save(UsersRecordDh usersCreatedDh);
+    UsersDto save(UsersCreatedDh usersCreatedDh);
 
-    UsersDto updateById(Integer id, UsersUpdatedRecordDh usersUpdatedDh);
+    UsersDto updateById(Integer id, UsersUpdatedDh usersUpdatedDh);
 
     Boolean deleteLogicById(Integer id);
 

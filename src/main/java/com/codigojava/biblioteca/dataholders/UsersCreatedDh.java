@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public record UsersRecordDh(
+public record UsersCreatedDh(
 
         @NotBlank(message = "User full name is mandatory")
         @Size(max = 120, message = "User full name cannot exceed 120 characters")

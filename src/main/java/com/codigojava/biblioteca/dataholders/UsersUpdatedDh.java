@@ -3,7 +3,7 @@ package com.codigojava.biblioteca.dataholders;
 import com.codigojava.biblioteca.entities.RoleEnum;
 import jakarta.validation.constraints.*;
 
-public record UsersUpdatedRecordDh(
+public record UsersUpdatedDh(
 
         @NotNull(message = "The userId cannot be null")
         @Min(value = 1, message = "The userId must be greater than 0")
