@@ -3,9 +3,11 @@ package com.codigojava.biblioteca.services;
 import com.codigojava.biblioteca.dataholders.PublishersCreatedRecordDh;
 import com.codigojava.biblioteca.dtos.PublishersDto;
 import com.codigojava.biblioteca.entities.PublishersEntity;
+import com.codigojava.biblioteca.exceptions.BdNotFoundException;
 import com.codigojava.biblioteca.exceptions.BdNotSaveException;
 import com.codigojava.biblioteca.mappers.PublishersMapper;
 import com.codigojava.biblioteca.repositories.PublishersRepository;
+import jakarta.validation.constraints.NotBlank;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,14 +48,34 @@ public class PublishersServiceImp implements PublishersService {
     @Override
     public PublishersDto createPublisher(PublishersCreatedRecordDh publisherDh) {
 
-        if (publishersRepository.existsById(publisherDh.publisherId())){
+        if (publishersRepository.existsById(publisherDh.publisherId())) {
             log.warn("CreatePublisher - PublisherId {} already exists", publisherDh.publisherId());
             throw new BdNotSaveException("The publisherId " + publisherDh.publisherId() + " already exists.");
         }
-            PublishersEntity publisherNew = publishersMapper.asEntity(publisherDh);
-            PublishersEntity saved = publishersRepository.save(publisherNew);
-            return publishersMapper.asDto(saved);
+        PublishersEntity publisherNew = publishersMapper.asEntity(publisherDh);
+        PublishersEntity saved = publishersRepository.save(publisherNew);
+        return publishersMapper.asDto(saved);
+    }
 
+    @Override
+    public PublishersDto findById (Integer id){
+        var optionalPublisher=publishersRepository.findById(id);
+        if(optionalPublisher.isPresent()){
+           return publishersMapper.asDto(optionalPublisher.get());
+        }else{
+            throw new BdNotFoundException("GET - Publishers: There is not publisher with id {id} in database.");
+        }
 
+    }
+
+    public List<PublishersDto> findByName(String name){
+         List<PublishersEntity> publisherName=publishersRepository.findByNamePublisherContainingIgnoreCase(name);
+
+         if (CollectionUtils.isEmpty(publisherName)){
+             log.warn("FindByName for publishers - There are not publisher in the database");
+             throw new BdNotFoundException("GET - Publishers: There is not publisher with namePublisher {name} in database.");
+         }else {
+             return publishersMapper.asDtoList(publisherName);
+         }
     }
 }
