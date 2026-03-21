@@ -1,6 +1,6 @@
 package com.codigojava.biblioteca.services;
 
-import com.codigojava.biblioteca.dataholders.BooksRecordDh;
+import com.codigojava.biblioteca.dataholders.BooksDh;
 import com.codigojava.biblioteca.dtos.BooksDto;
 import com.codigojava.biblioteca.dtos.BooksFileDto;
 import com.codigojava.biblioteca.dtos.BooksPublicDto;
@@ -18,7 +18,6 @@ import com.codigojava.biblioteca.repositories.PublishersRepository;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import jakarta.validation.constraints.NotEmpty;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +30,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -160,7 +158,7 @@ public class BooksServiceImp implements BooksService {
     }
 
     @Override
-    public BooksDto save(final BooksRecordDh bookDh) {
+    public BooksDto save(final BooksDh bookDh) {
         final BooksEntity books = this.booksMapper.asEntity(bookDh);
 
         // Asignar relaciones ManyToOne con
@@ -190,7 +188,7 @@ public class BooksServiceImp implements BooksService {
     }
 
     @Override
-    public BooksDto updateById(final String isbn, final BooksRecordDh bookDh) {
+    public BooksDto updateById(final String isbn, final BooksDh bookDh) {
 
         BooksEntity existingBook = booksRepository.findById(isbn)
                 .orElseThrow(() -> new BdNotFoundException("PUT - No book not found with isbn: " + isbn));

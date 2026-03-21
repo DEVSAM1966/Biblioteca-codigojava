@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public record BooksFileRecordDh(
+public record BooksFileDh(
 
         @NotBlank(message = "Isbn is required")
         @Size(max = 13, message = "Isbn cannot exceed 13 characters")

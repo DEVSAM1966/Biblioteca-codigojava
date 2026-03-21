@@ -4,7 +4,7 @@ import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
 
-public record BooksRecordDh(
+public record BooksDh(
 
         @NotBlank(message = "Isbn is required")
         @Size(max = 13, message = "Isbn cannot exceed 13 characters")
