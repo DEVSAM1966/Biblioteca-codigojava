@@ -1,6 +1,6 @@
 package com.codigojava.biblioteca.services;
 
-import com.codigojava.biblioteca.dataholders.BooksRecordDh;
+import com.codigojava.biblioteca.dataholders.BooksDh;
 import com.codigojava.biblioteca.dtos.BooksDto;
 import com.codigojava.biblioteca.dtos.BooksFileDto;
 import com.codigojava.biblioteca.dtos.BooksPublicDto;
@@ -33,10 +33,10 @@ public interface BooksService {
     BooksFileDto findFileById(String isbn);
 
     // Método POST - Crear un libro
-    BooksDto save(BooksRecordDh bookDh);
+    BooksDto save(BooksDh bookDh);
 
     // Método PUT - Modificar un libro y NO sube ficheros (portada y PDF)
-    BooksDto updateById(String ibsn, BooksRecordDh bookDh);
+    BooksDto updateById(String ibsn, BooksDh bookDh);
 
     // Método PUT - Añadir ficheros portada y libro
     BooksDto updateFiles(String isbn, MultipartFile bookCover, MultipartFile bookFile);

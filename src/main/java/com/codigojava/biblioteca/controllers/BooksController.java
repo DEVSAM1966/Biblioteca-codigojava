@@ -1,17 +1,15 @@
 package com.codigojava.biblioteca.controllers;
 
-import com.codigojava.biblioteca.dataholders.BooksRecordDh;
+import com.codigojava.biblioteca.dataholders.BooksDh;
 import com.codigojava.biblioteca.dtos.BooksDto;
 import com.codigojava.biblioteca.dtos.BooksFileDto;
 import com.codigojava.biblioteca.dtos.BooksPublicDto;
 import com.codigojava.biblioteca.dtos.BooksPublicIsbnDto;
-import com.codigojava.biblioteca.mappers.BooksMapper;
 import com.codigojava.biblioteca.services.BooksService;
+import com.codigojava.biblioteca.validators.annotations.ValidIsbn;
+import com.codigojava.biblioteca.wrappers.ApiResponse;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -21,111 +19,115 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.net.URI;
 import java.util.List;
 
 @Slf4j
+@Validated
 @RestController
 @RequestMapping("/books")
 @RequiredArgsConstructor
 public class BooksController {
 
-    @NonNull
-    private BooksService  booksService;
-
-    @NonNull
-    private BooksMapper booksMapper;
+    private final BooksService  booksService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<BooksDto>> findAll() {
-        return ResponseEntity.ok(this.booksService.findAll());
+    public ResponseEntity<ApiResponse<List<BooksDto>>> findAll() {
+
+        return ResponseEntity.ok(new ApiResponse<>(this.booksService.findAll()));
+
     }
 
     @GetMapping(
             value = "/public",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<Page<BooksPublicDto>> findAllPublic(
+    public ResponseEntity<ApiResponse<Page<BooksPublicDto>>> findAllPublic(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int limit,
             @RequestParam(required = false) Long authorId,
             @RequestParam(required = false) Long categoryId
     ) {
-        return ResponseEntity.ok(this.booksService.findAllPublic(page, limit, authorId, categoryId));
+        return ResponseEntity.ok(new ApiResponse<>(this.booksService.findAllPublic(page, limit, authorId, categoryId)));
     }
 
     @GetMapping(
             value = "/private",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<Page<BooksPublicDto>> findAllPrivate(
+    public ResponseEntity<ApiResponse<Page<BooksPublicDto>>> findAllPrivate(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int limit,
             @RequestParam(required = false) Long authorId,
             @RequestParam(required = false) Long categoryId
     ) {
-        return ResponseEntity.ok(this.booksService.findAllPrivate(page, limit, authorId, categoryId));
+        return ResponseEntity.ok(new ApiResponse<>(this.booksService.findAllPrivate(page, limit, authorId, categoryId)));
     }
 
     @GetMapping(
             value = "/isbn/{isbn}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<BooksDto> findById(
-            @Valid @Size(min = 10, max = 13) @PathVariable final String isbn) {
-        return ResponseEntity.ok(this.booksService.findById(isbn));
+    public ResponseEntity<ApiResponse<BooksDto>> findById(
+            @ValidIsbn @PathVariable final String isbn) {
+        return ResponseEntity.ok(new ApiResponse<>(this.booksService.findById(isbn)));
     }
 
     @GetMapping(
             value = "/public/isbn/{isbn}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<BooksPublicIsbnDto> findByIdPublic(
-            @Valid @Size(min = 10, max = 13) @PathVariable final String isbn) {
-        return ResponseEntity.ok(this.booksService.findByIdPublic(isbn));
+    public ResponseEntity<ApiResponse<BooksPublicIsbnDto>> findByIdPublic(
+            @ValidIsbn @PathVariable final String isbn) {
+        return ResponseEntity.ok(new ApiResponse<>(this.booksService.findByIdPublic(isbn)));
     }
 
     @GetMapping(
             value = "/private/isbn/{isbn}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<BooksPublicIsbnDto> findByIdPrivate(
-            @Valid @Size(min = 10, max = 13) @PathVariable final String isbn) {
-        return ResponseEntity.ok(this.booksService.findByIdPublic(isbn));
+    public ResponseEntity<ApiResponse<BooksPublicIsbnDto>> findByIdPrivate(
+            @ValidIsbn @PathVariable final String isbn) {
+        return ResponseEntity.ok(new ApiResponse<>(this.booksService.findByIdPublic(isbn)));
     }
 
     @GetMapping(
             value = "/title/{name}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<List<BooksPublicDto>> findByName(
+    public ResponseEntity<ApiResponse<List<BooksPublicDto>>> findByName(
             @Valid @Size(max = 55) @PathVariable final String name) {
-        return ResponseEntity.ok(this.booksService.findByName(name));
+        return ResponseEntity.ok(new ApiResponse<>(this.booksService.findByName(name)));
     }
 
     @GetMapping(
             value = "/private/file/{isbn}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<BooksFileDto> findFileByIdPrivate(
-            @Valid @Size(min = 10, max = 13) @PathVariable final String isbn) {
-        return ResponseEntity.ok(this.booksService.findFileById(isbn));
+    public ResponseEntity<ApiResponse<BooksFileDto>> findFileByIdPrivate(
+            @ValidIsbn @PathVariable final String isbn) {
+        return ResponseEntity.ok(new ApiResponse<>(this.booksService.findFileById(isbn)));
     }
 
     @GetMapping(
             value = "/public/file/{isbn}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<BooksFileDto> findFileByIdPublic(
-            @Valid @Size(min = 10, max = 13) @PathVariable final String isbn) {
-        return ResponseEntity.ok(this.booksService.findFileById(isbn));
+    public ResponseEntity<ApiResponse<BooksFileDto>> findFileByIdPublic(
+            @ValidIsbn @PathVariable final String isbn) {
+        return ResponseEntity.ok(new ApiResponse<>(this.booksService.findFileById(isbn)));
     }
 
     @PostMapping(
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<BooksDto> save(@Validated @RequestBody final BooksRecordDh booksDh) {
-        return ResponseEntity.ok(this.booksService.save(booksDh));
+    public ResponseEntity<ApiResponse<BooksDto>> save(@Valid @RequestBody final BooksDh booksDh) {
+
+        BooksDto bookCreated = this.booksService.save(booksDh);
+        URI uri = URI.create("/books/" + bookCreated.isbn());
+
+        return ResponseEntity.created(uri).body(new ApiResponse<>(bookCreated));
     }
 
     @PutMapping(
@@ -133,10 +135,10 @@ public class BooksController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<BooksDto> updateById(
-            @Valid @Size(min = 10, max = 13) @PathVariable final String isbn,
-            @Validated @RequestBody final BooksRecordDh booksDh) {
-        return ResponseEntity.ok(this.booksService.updateById(isbn, booksDh));
+    public ResponseEntity<ApiResponse<BooksDto>> updateById(
+            @ValidIsbn @PathVariable final String isbn,
+            @Valid @RequestBody final BooksDh booksDh) {
+        return ResponseEntity.ok(new ApiResponse<>(this.booksService.updateById(isbn, booksDh)));
     }
 
     @PutMapping(
@@ -144,21 +146,21 @@ public class BooksController {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<BooksDto> updateBookFiles(
-            @PathVariable final String isbn,
+    public ResponseEntity<ApiResponse<BooksDto>> updateBookFiles(
+            @ValidIsbn @PathVariable final String isbn,
             @RequestPart("bookCover") final MultipartFile bookCover,
             @RequestPart("bookFile") final MultipartFile bookFile
     ) {
-        return ResponseEntity.ok(this.booksService.updateFiles(isbn, bookCover, bookFile));
+        return ResponseEntity.ok(new ApiResponse<>(this.booksService.updateFiles(isbn, bookCover, bookFile)));
     }
 
     @DeleteMapping(
             value = "/isbn/{isbn}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<Boolean> deleteById(
-            @Valid @Size(min = 10, max = 13) @PathVariable final String isbn) {
-        return ResponseEntity.ok(this.booksService.deleteById(isbn));
+    public ResponseEntity<ApiResponse<Boolean>> deleteById(
+            @ValidIsbn @PathVariable final String isbn) {
+        return ResponseEntity.ok(new ApiResponse<>(this.booksService.deleteById(isbn)));
     }
 
 }

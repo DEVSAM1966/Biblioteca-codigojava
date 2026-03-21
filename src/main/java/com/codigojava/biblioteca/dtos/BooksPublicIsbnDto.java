@@ -1,34 +1,30 @@
 package com.codigojava.biblioteca.dtos;
 
-import lombok.Data;
-
 import java.time.LocalDate;
 
-@Data
-public class BooksPublicIsbnDto {
+public record BooksPublicIsbnDto(
 
-    private String isbn;
+        String isbn,
 
-    private String title;
+        String title,
 
-    private String language;
+        String language,
 
-    private Integer pages;
+        Integer pages,
 
-    private String summary;
+        String summary,
 
-    private LocalDate editionDate;
+        LocalDate editionDate,
 
-    private String bookCover;
+        String bookCover,
 
-    private String authors;
+        String authors,
 
-    private String nameAuthor;
+        String nameAuthor,
 
-    private String nameCategory;
+        String nameCategory,
 
-    private String subtopicCategory;
+        String subtopicCategory,
 
-    private String namePublisher;
-
-}
+        String namePublisher
+) {}

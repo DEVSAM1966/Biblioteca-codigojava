@@ -1,6 +1,6 @@
 package com.codigojava.biblioteca.mappers;
 
-import com.codigojava.biblioteca.dataholders.BooksRecordDh;
+import com.codigojava.biblioteca.dataholders.BooksDh;
 import com.codigojava.biblioteca.dtos.BooksDto;
 import com.codigojava.biblioteca.dtos.BooksFileDto;
 import com.codigojava.biblioteca.dtos.BooksPublicDto;
@@ -18,9 +18,9 @@ import java.util.List;
 )
 public interface BooksMapper {
 
-    BooksEntity asEntity(BooksRecordDh booksDh);
+    BooksEntity asEntity(BooksDh booksDh);
 
-    List<BooksEntity> asEntityList(List<BooksRecordDh> booksDh);
+    List<BooksEntity> asEntityList(List<BooksDh> booksDh);
 
     @Mapping(target = "authorId", source = "author.authorId")
     @Mapping(target = "publisherId", source = "publisher.publisherId")
@@ -47,6 +47,6 @@ public interface BooksMapper {
 
     List<BooksPublicDto> asPrivateDtoList(List<BooksEntity> booksLists);
 
-    void updateEntityFromDh(BooksRecordDh booksDh, @MappingTarget BooksEntity entity);
+    void updateEntityFromDh(BooksDh booksDh, @MappingTarget BooksEntity entity);
 
 }
