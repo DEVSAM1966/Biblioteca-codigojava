@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
@@ -70,6 +71,7 @@ public class CategoriesServiceImp implements CategoriesService {
         }
     }
 
+    @Transactional
     @Override
     public Boolean deleteById(final Integer id) {
         final Optional<CategoriesEntity> existCategories = this.categoriesRepository.findById(id);
@@ -87,6 +89,7 @@ public class CategoriesServiceImp implements CategoriesService {
         }
     }
 
+    @Transactional
     @Override
     public CategoriesDto save(final CategoriesCreatedDh categoriesDh) {
         final CategoriesEntity categories = this.categoriesMapper.asEntity(categoriesDh);
@@ -103,6 +106,7 @@ public class CategoriesServiceImp implements CategoriesService {
         }
     }
 
+    @Transactional
     @Override
     public CategoriesDto updateById(final Integer id, final CategoriesUpdatedDh categoriesDh) {
         final CategoriesEntity existingCategory = this.categoriesRepository.findById(id)

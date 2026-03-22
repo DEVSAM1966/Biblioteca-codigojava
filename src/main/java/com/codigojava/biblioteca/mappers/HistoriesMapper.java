@@ -1,7 +1,7 @@
 package com.codigojava.biblioteca.mappers;
 
-import com.codigojava.biblioteca.dataholders.HistoriesRecordDh;
-import com.codigojava.biblioteca.dataholders.HistoriesUpdatedRecordDh;
+import com.codigojava.biblioteca.dataholders.HistoriesCreatedDh;
+import com.codigojava.biblioteca.dataholders.HistoriesUpdatedDh;
 import com.codigojava.biblioteca.dtos.HistoriesDto;
 import com.codigojava.biblioteca.entities.HistoriesEntity;
 import org.mapstruct.Mapper;
@@ -17,11 +17,11 @@ import java.util.List;
 public interface HistoriesMapper {
 
     @Mapping(target = "loan.loanId", source = "loanId")
-    HistoriesEntity asEntity(HistoriesRecordDh historyDh);
+    HistoriesEntity asEntity(HistoriesCreatedDh historyDh);
 
-    List<HistoriesEntity> asEntityList(List<HistoriesRecordDh> historiesDh);
+    List<HistoriesEntity> asEntityList(List<HistoriesCreatedDh> historiesDh);
 
-    void updateEntityFromDh(HistoriesUpdatedRecordDh historiesDh, @MappingTarget HistoriesEntity historiesEntity);
+    void updateEntityFromDh(HistoriesUpdatedDh historiesDh, @MappingTarget HistoriesEntity historiesEntity);
 
     @Mapping(target = "loanId", source = "loan.loanId")
     HistoriesDto asDto(HistoriesEntity historiesEntity);

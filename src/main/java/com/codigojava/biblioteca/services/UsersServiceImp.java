@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
@@ -70,6 +71,7 @@ public class UsersServiceImp implements UsersService{
         }
     }
 
+    @Transactional
     @Override
     public Boolean deleteById(final Integer id) {
         final Optional<UsersEntity> existUsers = this.usersRepository.findById(id);
@@ -87,6 +89,7 @@ public class UsersServiceImp implements UsersService{
         }
     }
 
+    @Transactional
     @Override
     public Boolean deleteLogicById(final Integer id) {
 
@@ -104,7 +107,7 @@ public class UsersServiceImp implements UsersService{
         }
     }
 
-
+    @Transactional
     @Override
     public UsersDto save(final UsersCreatedDh usersDh) {
         final UsersEntity users = this.usersMapper.asEntity(usersDh);
@@ -124,6 +127,7 @@ public class UsersServiceImp implements UsersService{
         }
     }
 
+    @Transactional
     @Override
     public UsersDto updateById(final Integer id, final UsersUpdatedDh usersDh) {
         final UsersEntity existingUser = this.usersRepository.findById(id)
