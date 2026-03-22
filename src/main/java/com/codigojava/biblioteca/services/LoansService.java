@@ -1,7 +1,7 @@
 package com.codigojava.biblioteca.services;
 
-import com.codigojava.biblioteca.dataholders.LoansRecordDh;
-import com.codigojava.biblioteca.dataholders.LoansUpdateRecordDh;
+import com.codigojava.biblioteca.dataholders.LoansCreatedDh;
+import com.codigojava.biblioteca.dataholders.LoansUpdatedDh;
 import com.codigojava.biblioteca.dtos.LoansDto;
 
 import java.util.List;
@@ -16,10 +16,10 @@ public interface LoansService {
 
     List<LoansDto> findByIsbn(String isbn);
 
-    LoansDto save(LoansRecordDh loansCreateDh);
+    LoansDto save(LoansCreatedDh loansCreateDh);
 
     Boolean deleteById(Integer id);
 
-    LoansDto updateById(Integer id, LoansUpdateRecordDh loansUpdateRecordDh);
+    LoansDto updateById(Integer id, LoansUpdatedDh loansUpdateRecordDh);
 
 }

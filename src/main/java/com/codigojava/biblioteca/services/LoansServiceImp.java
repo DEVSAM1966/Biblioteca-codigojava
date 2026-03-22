@@ -1,7 +1,7 @@
 package com.codigojava.biblioteca.services;
 
-import com.codigojava.biblioteca.dataholders.LoansRecordDh;
-import com.codigojava.biblioteca.dataholders.LoansUpdateRecordDh;
+import com.codigojava.biblioteca.dataholders.LoansCreatedDh;
+import com.codigojava.biblioteca.dataholders.LoansUpdatedDh;
 import com.codigojava.biblioteca.dtos.LoansDto;
 import com.codigojava.biblioteca.entities.LoansEntity;
 import com.codigojava.biblioteca.exceptions.BdInternalException;
@@ -82,7 +82,7 @@ public class LoansServiceImp implements LoansService {
     }
 
     @Override
-    public LoansDto save(final LoansRecordDh loansCreateDh) {
+    public LoansDto save(final LoansCreatedDh loansCreateDh) {
         final LoansEntity loans = this.loansMapper.asEntity(loansCreateDh);
 
         // Si loanDate viene null → asignar fecha actual
@@ -126,7 +126,7 @@ public class LoansServiceImp implements LoansService {
     }
 
     @Override
-    public LoansDto updateById(final Integer id, final LoansUpdateRecordDh loansDh) {
+    public LoansDto updateById(final Integer id, final LoansUpdatedDh loansDh) {
         final LoansEntity existingLoan = this.loansRepository.findById(id)
                 .orElseThrow(() -> new BdNotFoundException("PUT - No loan found with id: " + id));
 

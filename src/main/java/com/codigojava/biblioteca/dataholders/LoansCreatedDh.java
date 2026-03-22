@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 
-public record LoansRecordDh(
+public record LoansCreatedDh(
 
         @JsonFormat(pattern = "yyyy-MM-dd")
         LocalDate loanDate,
