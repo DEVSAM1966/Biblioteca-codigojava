@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 
-public record HistoriesUpdatedRecordDh(
+public record HistoriesUpdatedDh(
 
         @Min(value = 1, message = "History id must be a number positive")
         Integer historyId,

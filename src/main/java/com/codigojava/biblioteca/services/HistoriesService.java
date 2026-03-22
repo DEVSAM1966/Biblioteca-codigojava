@@ -1,7 +1,7 @@
 package com.codigojava.biblioteca.services;
 
-import com.codigojava.biblioteca.dataholders.HistoriesRecordDh;
-import com.codigojava.biblioteca.dataholders.HistoriesUpdatedRecordDh;
+import com.codigojava.biblioteca.dataholders.HistoriesCreatedDh;
+import com.codigojava.biblioteca.dataholders.HistoriesUpdatedDh;
 import com.codigojava.biblioteca.dtos.HistoriesDto;
 
 import java.util.List;
@@ -14,9 +14,9 @@ public interface HistoriesService {
 
     List<HistoriesDto> findByLoanId(Integer id);
 
-    HistoriesDto save(HistoriesRecordDh historiesDh);
+    HistoriesDto save(HistoriesCreatedDh historiesDh);
 
-    HistoriesDto updateById(Integer id, HistoriesUpdatedRecordDh historiesDh);
+    HistoriesDto updateById(Integer id, HistoriesUpdatedDh historiesDh);
 
     Boolean deleteById(Integer id);
 

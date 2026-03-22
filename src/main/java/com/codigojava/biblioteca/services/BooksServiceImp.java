@@ -27,6 +27,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -157,6 +158,7 @@ public class BooksServiceImp implements BooksService {
         }
     }
 
+    @Transactional
     @Override
     public BooksDto save(final BooksDh bookDh) {
         final BooksEntity books = this.booksMapper.asEntity(bookDh);
@@ -187,6 +189,7 @@ public class BooksServiceImp implements BooksService {
         }
     }
 
+    @Transactional
     @Override
     public BooksDto updateById(final String isbn, final BooksDh bookDh) {
 
@@ -229,6 +232,7 @@ public class BooksServiceImp implements BooksService {
 
     }
 
+    @Transactional
     @Override
     public BooksDto updateFiles(final String isbn, final MultipartFile bookCover, final MultipartFile bookFile) {
 
@@ -289,6 +293,7 @@ public class BooksServiceImp implements BooksService {
         return booksMapper.asDto(saved);
     }
 
+    @Transactional
     public Boolean deleteById(final String isbn) {
         final Optional<BooksEntity> existingBook = booksRepository.findById(isbn);
 

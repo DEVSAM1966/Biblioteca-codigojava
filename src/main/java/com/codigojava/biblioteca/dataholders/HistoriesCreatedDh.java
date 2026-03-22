@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 
-public record HistoriesRecordDh(
+public record HistoriesCreatedDh(
 
         @JsonFormat(pattern = "yyyy-MM-dd")
         LocalDate dateFeedback,

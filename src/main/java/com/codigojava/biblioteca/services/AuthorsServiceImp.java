@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
@@ -68,6 +69,7 @@ public class AuthorsServiceImp implements AuthorsService {
         }
     }
 
+    @Transactional
     @Override
     public Boolean deleteById(final Integer id) {
         final Optional<AuthorsEntity> existAuthors = this.authorsRepository.findById(id);
@@ -86,6 +88,7 @@ public class AuthorsServiceImp implements AuthorsService {
 
     }
 
+    @Transactional
     @Override
     public AuthorsDto save(final AuthorsCreatedDh authorsDh) {
 
@@ -104,6 +107,7 @@ public class AuthorsServiceImp implements AuthorsService {
 
     }
 
+    @Transactional
     @Override
     public AuthorsDto updateById(final Integer id, final AuthorsUpdatedDh authorsDh) {
 

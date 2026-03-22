@@ -1,7 +1,7 @@
 package com.codigojava.biblioteca.services;
 
-import com.codigojava.biblioteca.dataholders.HistoriesRecordDh;
-import com.codigojava.biblioteca.dataholders.HistoriesUpdatedRecordDh;
+import com.codigojava.biblioteca.dataholders.HistoriesCreatedDh;
+import com.codigojava.biblioteca.dataholders.HistoriesUpdatedDh;
 import com.codigojava.biblioteca.dtos.HistoriesDto;
 import com.codigojava.biblioteca.entities.HistoriesEntity;
 import com.codigojava.biblioteca.exceptions.BdInternalException;
@@ -9,13 +9,14 @@ import com.codigojava.biblioteca.exceptions.BdNotFoundException;
 import com.codigojava.biblioteca.exceptions.BdNotSaveException;
 import com.codigojava.biblioteca.mappers.HistoriesMapper;
 import com.codigojava.biblioteca.repositories.HistoriesRepository;
+
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.support.BeanDefinitionValidationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
@@ -71,8 +72,9 @@ public class HistoriesServiceImp implements HistoriesService {
         }
     }
 
+    @Transactional
     @Override
-    public HistoriesDto save(final HistoriesRecordDh historiesDh) {
+    public HistoriesDto save(final HistoriesCreatedDh historiesDh) {
         final HistoriesEntity histories = this.historiesMapper.asEntity(historiesDh);
 
         try {
@@ -87,8 +89,9 @@ public class HistoriesServiceImp implements HistoriesService {
         }
     }
 
+    @Transactional
     @Override
-    public HistoriesDto updateById(final Integer id, final HistoriesUpdatedRecordDh historiesDh) {
+    public HistoriesDto updateById(final Integer id, final HistoriesUpdatedDh historiesDh) {
         final HistoriesEntity existingHistory = this.historiesRepository.findById(id)
                 .orElseThrow(() -> new BdNotFoundException("PUT - No history found with id: " + id));
 
@@ -112,6 +115,7 @@ public class HistoriesServiceImp implements HistoriesService {
         }
     }
 
+    @Transactional
     @Override
     public Boolean deleteById(final Integer id) {
         final Optional<HistoriesEntity> existingHistories = this.historiesRepository.findById(id);

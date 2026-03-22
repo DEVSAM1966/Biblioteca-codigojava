@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
@@ -81,6 +82,7 @@ public class LoansServiceImp implements LoansService {
         }
     }
 
+    @Transactional
     @Override
     public LoansDto save(final LoansCreatedDh loansCreateDh) {
         final LoansEntity loans = this.loansMapper.asEntity(loansCreateDh);
@@ -107,6 +109,7 @@ public class LoansServiceImp implements LoansService {
         }
     }
 
+    @Transactional
     @Override
     public Boolean deleteById(final Integer id) {
         final Optional<LoansEntity> loansOptional = this.loansRepository.findById(id);
@@ -125,6 +128,7 @@ public class LoansServiceImp implements LoansService {
 
     }
 
+    @Transactional
     @Override
     public LoansDto updateById(final Integer id, final LoansUpdatedDh loansDh) {
         final LoansEntity existingLoan = this.loansRepository.findById(id)
