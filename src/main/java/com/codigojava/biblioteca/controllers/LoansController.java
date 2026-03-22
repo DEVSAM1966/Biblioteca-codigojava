@@ -1,89 +1,75 @@
 package com.codigojava.biblioteca.controllers;
 
-import com.codigojava.biblioteca.dataholders.LoansRecordDh;
-import com.codigojava.biblioteca.dataholders.LoansUpdateRecordDh;
+import com.codigojava.biblioteca.dataholders.LoansCreatedDh;
+import com.codigojava.biblioteca.dataholders.LoansUpdatedDh;
 import com.codigojava.biblioteca.dtos.LoansDto;
-import com.codigojava.biblioteca.exceptions.DhValidationException;
 import com.codigojava.biblioteca.services.LoansService;
-import com.codigojava.biblioteca.validators.DhValidator;
-import lombok.NonNull;
+import com.codigojava.biblioteca.validators.annotations.PositiveId;
+import com.codigojava.biblioteca.validators.annotations.ValidIsbn;
+import com.codigojava.biblioteca.wrappers.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @Slf4j
+@Validated
 @RestController
 @RequestMapping("/loans")
 @RequiredArgsConstructor
 public class LoansController {
 
-    @NonNull
-    private LoansService loansService;
-
-    @Autowired
-    private DhValidator dhValidator;
+    private final LoansService loansService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<LoansDto>> findAll() {
-        return ResponseEntity.ok(loansService.findAll());
+    public ResponseEntity<ApiResponse<List<LoansDto>>> findAll() {
+
+        return ResponseEntity.ok(new ApiResponse<>(loansService.findAll()));
     }
 
     @GetMapping(value = "/id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<LoansDto> findById(@Validated @PathVariable final Integer id) {
+    public ResponseEntity<ApiResponse<LoansDto>> findById(@PositiveId @PathVariable final Integer id) {
 
-
-        if (id == null || id <= 0) {
-            throw new DhValidationException("id", "The id must be a positive integer greater than 0");
-        }
-
-        return ResponseEntity.ok(loansService.findById(id));
+        return ResponseEntity.ok(new ApiResponse<>(loansService.findById(id)));
     }
 
     @GetMapping(value = "/userid/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<LoansDto>> findByUserId(@Validated @PathVariable final Integer id) {
+    public ResponseEntity<ApiResponse<List<LoansDto>>> findByUserId(@PositiveId @PathVariable final Integer id) {
 
-        if (id == null || id <= 0) {
-            throw new DhValidationException("id", "The id must be a positive integer greater than 0");
-        }
-
-        return ResponseEntity.ok(this.loansService.findByUserId(id));
+        return ResponseEntity.ok(new ApiResponse<>(this.loansService.findByUserId(id)));
     }
 
     @GetMapping(value = "/isbn/{isbn}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<LoansDto>> findByIsbn(@Validated @PathVariable final String isbn) {
+    public ResponseEntity<ApiResponse<List<LoansDto>>> findByIsbn(@ValidIsbn @PathVariable final String isbn) {
 
-        return ResponseEntity.ok(this.loansService.findByIsbn(isbn));
+        return ResponseEntity.ok(new ApiResponse<>(this.loansService.findByIsbn(isbn)));
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<LoansDto> save(@Validated @RequestBody final LoansRecordDh loansRecordDh) {
-        return ResponseEntity.ok(loansService.save(loansRecordDh));
+    public ResponseEntity<ApiResponse<LoansDto>> save(@Valid @RequestBody final LoansCreatedDh loansDh) {
+
+        LoansDto loanCreated = this.loansService.save(loansDh);
+        URI uri = URI.create("/loans/" + loanCreated.loanId());
+
+        return ResponseEntity.created(uri).body(new ApiResponse<>(loanCreated));
     }
 
     @DeleteMapping(value = "/id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Boolean> deleteById(@Validated @PathVariable final Integer id) {
+    public ResponseEntity<ApiResponse<Boolean>> deleteById(@PositiveId @PathVariable final Integer id) {
 
-        if (id == null || id <= 0) {
-            throw new DhValidationException("id", "The id must be a positive integer greater than 0");
-        }
-
-        return ResponseEntity.ok(this.loansService.deleteById(id));
+        return ResponseEntity.ok(new ApiResponse<>(this.loansService.deleteById(id)));
     }
 
     @PutMapping(value = "/id/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<LoansDto> updateById(@Validated @PathVariable final Integer id, @Validated @RequestBody final LoansUpdateRecordDh loansDh) {
+    public ResponseEntity<ApiResponse<LoansDto>> updateById(@PositiveId @PathVariable final Integer id, @Valid @RequestBody final LoansUpdatedDh loansDh) {
 
-        if (id == null || id <= 0) {
-            throw new DhValidationException("id", "The id must be a positive integer greater than 0");
-        }
-
-        return ResponseEntity.ok(this.loansService.updateById(id, loansDh));
+        return ResponseEntity.ok(new ApiResponse<>(this.loansService.updateById(id, loansDh)));
     }
 
 }

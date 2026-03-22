@@ -1,6 +1,6 @@
 package com.codigojava.biblioteca.mappers;
 
-import com.codigojava.biblioteca.dataholders.LoansRecordDh;
+import com.codigojava.biblioteca.dataholders.LoansCreatedDh;
 import com.codigojava.biblioteca.dtos.LoansDto;
 import com.codigojava.biblioteca.entities.LoansEntity;
 import org.mapstruct.Mapper;
@@ -18,9 +18,9 @@ public interface LoansMapper {
     @Mapping(target = "returnDate", source = "returnDate")
     @Mapping(target = "user.userId", source = "userId")
     @Mapping(target = "book.isbn", source = "isbn")
-    LoansEntity asEntity(LoansRecordDh loansDh);
+    LoansEntity asEntity(LoansCreatedDh loansDh);
 
-    List<LoansEntity> asEntityList(List<LoansRecordDh> loansDh);
+    List<LoansEntity> asEntityList(List<LoansCreatedDh> loansDh);
 
     @Mapping(target = "userId", source = "user.userId")
     @Mapping(target = "isbn", source = "book.isbn")
