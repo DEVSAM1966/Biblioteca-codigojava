@@ -4,16 +4,21 @@ import com.codigojava.biblioteca.dataholders.PublishersCreatedRecordDh;
 import com.codigojava.biblioteca.dtos.PublishersDto;
 import com.codigojava.biblioteca.entities.PublishersEntity;
 import com.codigojava.biblioteca.services.PublishersService;
+import com.codigojava.biblioteca.validators.annotations.PositiveId;
 import com.codigojava.biblioteca.wrappers.ApiResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
+@Validated
 @RestController
 @RequestMapping("/publishers")
 @RequiredArgsConstructor
@@ -33,10 +38,6 @@ public class PublishersController {
         var uri=uriComponentsBuilder.path("/publishers/{id}").buildAndExpand(created.publisherId()).toUri();
 
         return ResponseEntity.created(uri).body(new ApiResponse<>(created));
-
-
-
-
     }
 
     @GetMapping
@@ -44,6 +45,21 @@ public class PublishersController {
         List<PublishersDto> publishers = publishersService.findAll();
         return ResponseEntity.ok(publishers);
     }
+
+    @GetMapping("/id/{id}")
+    public ResponseEntity findById (@Validated @PathVariable @PositiveId Integer id){
+
+        var findById= publishersService.findById(id);
+        return ResponseEntity.ok(new ApiResponse<>(findById));
+    }
+
+    @GetMapping("/name/{name}")
+    public ResponseEntity<ApiResponse<List<PublishersDto>>> findByName(@PathVariable @NotBlank String name){
+        List<PublishersDto> findByName=publishersService.findByName(name);
+        return ResponseEntity.ok(new ApiResponse<>(findByName));
+    }
+
+
 
 
 
