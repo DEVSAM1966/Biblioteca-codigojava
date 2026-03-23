@@ -37,9 +37,15 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/AuthorsDto'
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AuthorsDto'
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
 
     post:
       tags: [Authors]
@@ -56,7 +62,18 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthorsDto'
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/AuthorsDto'
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
+              example:
+                data:
+                  authorId: 12
+                  nameAuthor: "Gabriel García Márquez"
+                timestamp: "23/03/2026, 12:24:31"
 
   /authors/id/{id}:
     get:
@@ -75,7 +92,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthorsDto'
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/AuthorsDto'
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
 
     delete:
       tags: [Authors]
@@ -93,8 +116,14 @@ paths:
           content:
             application/json:
               schema:
-                type: boolean
-                example: true
+                type: object
+                properties:
+                  data:
+                    type: boolean
+                    example: true
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
 
     put:
       tags: [Authors]
@@ -118,7 +147,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthorsDto'
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/AuthorsDto'
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
 
   /authors/name/{name}:
     get:
@@ -137,9 +172,15 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/AuthorsDto'
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AuthorsDto'
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
 
 
   ########################################
@@ -148,7 +189,7 @@ paths:
 
   /categories:
     get:
-      tags: [Categories]
+      tags: [ Categories ]
       summary: Obtener todas las categorías
       responses:
         '200':
@@ -156,12 +197,18 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CategoriesDto'
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CategoriesDto'
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
 
     post:
-      tags: [Categories]
+      tags: [ Categories ]
       summary: Crear una nueva categoría
       requestBody:
         required: true
@@ -175,11 +222,23 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CategoriesDto'
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/CategoriesDto'
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
+            example:
+              data:
+                categoryId: 10
+                nameCategory: "Ficción"
+              timestamp: "23/03/2026, 12:24:31"
+
 
   /categories/id/{id}:
     get:
-      tags: [Categories]
+      tags: [ Categories ]
       summary: Buscar categoría por ID
       parameters:
         - name: id
@@ -194,10 +253,16 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CategoriesDto'
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/CategoriesDto'
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
 
     delete:
-      tags: [Categories]
+      tags: [ Categories ]
       summary: Eliminar categoría por ID
       parameters:
         - name: id
@@ -212,11 +277,17 @@ paths:
           content:
             application/json:
               schema:
-                type: boolean
-                example: true
+                type: object
+                properties:
+                  data:
+                    type: boolean
+                    example: true
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
 
     put:
-      tags: [Categories]
+      tags: [ Categories ]
       summary: Actualizar categoría por ID
       parameters:
         - name: id
@@ -237,11 +308,18 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CategoriesDto'
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/CategoriesDto'
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
+
 
   /categories/name/{name}:
     get:
-      tags: [Categories]
+      tags: [ Categories ]
       summary: Buscar categorías por nombre o subtema
       parameters:
         - name: name
@@ -256,9 +334,16 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CategoriesDto'
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CategoriesDto'
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
+
 
 
   ########################################
@@ -275,9 +360,15 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/UsersDto'
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/UsersDto'
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
 
     post:
       tags: [ Users ]
@@ -289,12 +380,24 @@ paths:
             schema:
               $ref: '#/components/schemas/UsersCreatedDh'
       responses:
-        '200':
+        '201':
           description: Usuario creado correctamente
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UsersDto'
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/UsersDto'
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
+            example:
+              data:
+                userId: 8
+                nameUser: "Carlos Pérez"
+                emailUser: "carlos@example.com"
+              timestamp: "23/03/2026, 12:24:31"
 
 
   /users/id/{id}:
@@ -314,7 +417,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UsersDto'
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/UsersDto'
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
 
     delete:
       tags: [ Users ]
@@ -332,8 +441,14 @@ paths:
           content:
             application/json:
               schema:
-                type: boolean
-                example: true
+                type: object
+                properties:
+                  data:
+                    type: boolean
+                    example: true
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
 
     put:
       tags: [ Users ]
@@ -357,7 +472,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UsersDto'
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/UsersDto'
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
 
 
   /users/name/{name}:
@@ -377,9 +498,15 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/UsersDto'
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/UsersDto'
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
 
 
   /users/drop/id/{id}:
@@ -399,8 +526,14 @@ paths:
           content:
             application/json:
               schema:
-                type: boolean
-                example: true
+                type: object
+                properties:
+                  data:
+                    type: boolean
+                    example: true
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
 
 
   ########################################
@@ -409,7 +542,7 @@ paths:
 
   /books:
     get:
-      tags: [Books]
+      tags: [ Books ]
       summary: Obtener todos los libros (versión completa)
       responses:
         '200':
@@ -417,9 +550,15 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/BooksDto'
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/BooksDto'
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
 
     post:
       tags: [ Books ]
@@ -431,16 +570,29 @@ paths:
             schema:
               $ref: '#/components/schemas/BooksRecordDh'
       responses:
-        '200':
+        '201':
           description: Libro creado correctamente
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BooksDto'
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/BooksDto'
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
+            example:
+              data:
+                isbn: "9781234567895"
+                title: "Fundación"
+                authorId: 1
+              timestamp: "23/03/2026, 12:24:31"
+
 
   /books/public:
     get:
-      tags: [Books]
+      tags: [ Books ]
       summary: Obtener todos los libros (vista pública)
       responses:
         '200':
@@ -448,13 +600,20 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/BooksPublicDto'
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/BooksPublicDto'
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
+
 
   /books/private:
     get:
-      tags: [Books]
+      tags: [ Books ]
       summary: Obtener todos los libros (vista privada)
       responses:
         '200':
@@ -462,13 +621,20 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/BooksPublicDto'
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/BooksPublicDto'
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
+
 
   /books/isbn/{isbn}:
     get:
-      tags: [Books]
+      tags: [ Books ]
       summary: Buscar libro por ISBN (versión completa)
       parameters:
         - name: isbn
@@ -485,10 +651,16 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BooksDto'
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/BooksDto'
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
 
     delete:
-      tags: [Books]
+      tags: [ Books ]
       summary: Eliminar libro por ISBN (incluye borrado físico de ficheros)
       parameters:
         - name: isbn
@@ -505,11 +677,17 @@ paths:
           content:
             application/json:
               schema:
-                type: boolean
-                example: true
+                type: object
+                properties:
+                  data:
+                    type: boolean
+                    example: true
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
 
     put:
-      tags: [Books]
+      tags: [ Books ]
       summary: Actualizar libro por ISBN (sin subir ficheros)
       parameters:
         - name: isbn
@@ -532,11 +710,18 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BooksDto'
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/BooksDto'
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
+
 
   /books/public/isbn/{isbn}:
     get:
-      tags: [Books]
+      tags: [ Books ]
       summary: Buscar libro por ISBN (vista pública)
       parameters:
         - name: isbn
@@ -551,11 +736,18 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BooksPublicIsbnDto'
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/BooksPublicIsbnDto'
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
+
 
   /books/private/isbn/{isbn}:
     get:
-      tags: [Books]
+      tags: [ Books ]
       summary: Buscar libro por ISBN (vista privada)
       parameters:
         - name: isbn
@@ -570,11 +762,18 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BooksPublicIsbnDto'
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/BooksPublicIsbnDto'
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
+
 
   /books/title/{name}:
     get:
-      tags: [Books]
+      tags: [ Books ]
       summary: Buscar libros por título (contiene)
       parameters:
         - name: name
@@ -590,13 +789,20 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/BooksPublicDto'
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/BooksPublicDto'
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
+
 
   /books/private/file/{isbn}:
     get:
-      tags: [Books]
+      tags: [ Books ]
       summary: Obtener ruta del fichero PDF (privado)
       parameters:
         - name: isbn
@@ -611,11 +817,18 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BooksFileDto'
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/BooksFileDto'
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
+
 
   /books/public/file/{isbn}:
     get:
-      tags: [Books]
+      tags: [ Books ]
       summary: Obtener ruta del fichero PDF (público)
       parameters:
         - name: isbn
@@ -630,11 +843,18 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BooksFileDto'
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/BooksFileDto'
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
+
 
   /books/{isbn}/files:
     put:
-      tags: [Books]
+      tags: [ Books ]
       summary: Subir portada y fichero PDF de un libro
       parameters:
         - name: isbn
@@ -662,7 +882,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BooksDto'
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/BooksDto'
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
+
 
   ########################################
   #                 LOANS
@@ -670,7 +897,7 @@ paths:
 
   /loans:
     get:
-      tags: [Loans]
+      tags: [ Loans ]
       summary: Obtener todos los préstamos
       responses:
         '200':
@@ -678,12 +905,18 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/LoansDto'
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/LoansDto'
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
 
     post:
-      tags: [Loans]
+      tags: [ Loans ]
       summary: Crear un nuevo préstamo
       requestBody:
         required: true
@@ -692,17 +925,30 @@ paths:
             schema:
               $ref: '#/components/schemas/LoansRecordDh'
       responses:
-        '200':
+        '201':
           description: Préstamo creado correctamente
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LoansDto'
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/LoansDto'
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
+            example:
+              data:
+                loanId: 5
+                userId: 3
+                isbn: "9781234567895"
+                loanDate: "2026-03-23"
+              timestamp: "23/03/2026, 12:24:31"
 
 
   /loans/id/{id}:
     get:
-      tags: [Loans]
+      tags: [ Loans ]
       summary: Buscar préstamo por ID
       parameters:
         - name: id
@@ -717,10 +963,16 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LoansDto'
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/LoansDto'
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
 
     delete:
-      tags: [Loans]
+      tags: [ Loans ]
       summary: Eliminar préstamo por ID
       parameters:
         - name: id
@@ -735,11 +987,17 @@ paths:
           content:
             application/json:
               schema:
-                type: boolean
-                example: true
+                type: object
+                properties:
+                  data:
+                    type: boolean
+                    example: true
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
 
     put:
-      tags: [Loans]
+      tags: [ Loans ]
       summary: Actualizar préstamo por ID
       parameters:
         - name: id
@@ -760,12 +1018,18 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LoansDto'
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/LoansDto'
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
 
 
   /loans/userid/{id}:
     get:
-      tags: [Loans]
+      tags: [ Loans ]
       summary: Buscar préstamos por ID de usuario
       parameters:
         - name: id
@@ -780,14 +1044,20 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/LoansDto'
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/LoansDto'
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
 
 
   /loans/isbn/{isbn}:
     get:
-      tags: [Loans]
+      tags: [ Loans ]
       summary: Buscar préstamos por ISBN
       parameters:
         - name: isbn
@@ -802,9 +1072,16 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/LoansDto'
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/LoansDto'
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
+
 
   ########################################
   #               HISTORIES
@@ -812,7 +1089,7 @@ paths:
 
   /histories:
     get:
-      tags: [Histories]
+      tags: [ Histories ]
       summary: Obtener todos los historiales de feedback
       responses:
         '200':
@@ -820,12 +1097,18 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/HistoriesDto'
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/HistoriesDto'
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
 
     post:
-      tags: [Histories]
+      tags: [ Histories ]
       summary: Crear un nuevo historial de feedback
       requestBody:
         required: true
@@ -834,17 +1117,30 @@ paths:
             schema:
               $ref: '#/components/schemas/HistoriesRecordDh'
       responses:
-        '200':
+        '201':
           description: Historial creado correctamente
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HistoriesDto'
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/HistoriesDto'
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
+            example:
+              data:
+                historyId: 3
+                loanId: 5
+                comment: "Todo correcto"
+                createdAt: "2026-03-23"
+              timestamp: "23/03/2026, 12:24:31"
 
 
   /histories/id/{id}:
     get:
-      tags: [Histories]
+      tags: [ Histories ]
       summary: Buscar historial por ID
       parameters:
         - name: id
@@ -859,10 +1155,16 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HistoriesDto'
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/HistoriesDto'
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
 
     delete:
-      tags: [Histories]
+      tags: [ Histories ]
       summary: Eliminar historial por ID
       parameters:
         - name: id
@@ -877,11 +1179,17 @@ paths:
           content:
             application/json:
               schema:
-                type: boolean
-                example: true
+                type: object
+                properties:
+                  data:
+                    type: boolean
+                    example: true
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
 
     put:
-      tags: [Histories]
+      tags: [ Histories ]
       summary: Actualizar historial por ID
       parameters:
         - name: id
@@ -902,12 +1210,18 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HistoriesDto'
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/HistoriesDto'
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
 
 
   /histories/loans/{id}:
     get:
-      tags: [Histories]
+      tags: [ Histories ]
       summary: Buscar historiales por ID de préstamo
       parameters:
         - name: id
@@ -922,9 +1236,15 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/HistoriesDto'
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/HistoriesDto'
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
 
 
 components:
@@ -1443,6 +1763,19 @@ components:
           type: integer
           minimum: 1
           example: 14
+
+    ########################################
+    #           APIRESPONSE SCHEMAS
+    ########################################
+
+    ApiResponse:
+      type: object
+      properties:
+        data:
+          description: Contenido devuelto por el backend
+        timestamp:
+          type: string
+          example: "23/03/2026, 12:24:31"
 
 
     RoleEnum:
