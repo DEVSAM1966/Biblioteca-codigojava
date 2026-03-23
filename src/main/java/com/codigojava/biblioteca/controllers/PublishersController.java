@@ -1,6 +1,7 @@
 package com.codigojava.biblioteca.controllers;
 
 import com.codigojava.biblioteca.dataholders.PublishersCreatedRecordDh;
+import com.codigojava.biblioteca.dataholders.PublishersUpdatedRecordDh;
 import com.codigojava.biblioteca.dtos.PublishersDto;
 import com.codigojava.biblioteca.entities.PublishersEntity;
 import com.codigojava.biblioteca.services.PublishersService;
@@ -10,6 +11,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -58,6 +60,19 @@ public class PublishersController {
         List<PublishersDto> findByName=publishersService.findByName(name);
         return ResponseEntity.ok(new ApiResponse<>(findByName));
     }
+
+    @PutMapping("/id/{id}")
+    public ResponseEntity<ApiResponse<PublishersDto>> updateById(@Validated @PathVariable @PositiveId Integer id, @RequestBody @Valid PublishersUpdatedRecordDh updatedRecordDh){
+        var updatePublisher = publishersService.updateById(id,updatedRecordDh);
+        return ResponseEntity.ok(new ApiResponse<>(updatePublisher));
+    }
+
+    @DeleteMapping(value = "/id/{id}")
+    public ResponseEntity<ApiResponse<Boolean>> deleteById(@PositiveId @PathVariable Integer id) {
+        var delete= publishersService.deleteById(id);
+        return ResponseEntity.ok(new ApiResponse<>(delete));
+    }
+
 
 
 

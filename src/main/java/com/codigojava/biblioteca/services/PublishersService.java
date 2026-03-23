@@ -1,6 +1,7 @@
 package com.codigojava.biblioteca.services;
 
 import com.codigojava.biblioteca.dataholders.PublishersCreatedRecordDh;
+import com.codigojava.biblioteca.dataholders.PublishersUpdatedRecordDh;
 import com.codigojava.biblioteca.dtos.PublishersDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -16,4 +17,8 @@ public interface PublishersService {
     PublishersDto findById(Integer id);
 
     List<PublishersDto> findByName(@NotBlank String name);
+
+    PublishersDto updateById(Integer id, @Valid PublishersUpdatedRecordDh updatedRecordDh);
+
+    Boolean deleteById(Integer id);
 }

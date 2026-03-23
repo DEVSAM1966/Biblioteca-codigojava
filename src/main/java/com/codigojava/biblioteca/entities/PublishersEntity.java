@@ -1,5 +1,6 @@
 package com.codigojava.biblioteca.entities;
 import com.codigojava.biblioteca.dataholders.PublishersCreatedRecordDh;
+import com.codigojava.biblioteca.dataholders.PublishersUpdatedRecordDh;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -64,4 +65,30 @@ public class PublishersEntity {
     private String notes;
 
 
+    public void updateFields(@Valid PublishersUpdatedRecordDh updatedRecordDh) {
+        if (updatedRecordDh.namePublisher() != null) {
+            this.namePublisher = updatedRecordDh.namePublisher();
+        }
+        if (updatedRecordDh.address() != null) {
+            this.address = updatedRecordDh.address();
+        }
+        if (updatedRecordDh.city() != null) {
+            this.city = updatedRecordDh.city();
+        }
+        if (updatedRecordDh.province() != null) {
+            this.province = updatedRecordDh.province();
+        }
+        if (updatedRecordDh.postalCode() != null) {
+            this.postalCode = updatedRecordDh.postalCode();
+        }
+        if (updatedRecordDh.country() != null) {
+            this.country = updatedRecordDh.country();
+        }
+        if (updatedRecordDh.phone() != null) {
+            this.phone = updatedRecordDh.phone();
+        }
+        if (updatedRecordDh.notes() != null) {
+            this.notes = updatedRecordDh.notes();
+        }
+    }
 }
