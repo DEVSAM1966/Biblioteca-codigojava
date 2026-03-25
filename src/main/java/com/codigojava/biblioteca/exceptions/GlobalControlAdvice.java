@@ -168,5 +168,17 @@ public class GlobalControlAdvice {
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(BdConflictException.class)
+    public ResponseEntity<Object> bdConflictHandler(Exception e) {
+
+        ApiError apiError = ApiError.builder()
+                .message(e.getMessage())
+                .description("(Exception) - The object cannot be deleted due to existing associations")
+                .date(java.time.LocalDate.now())
+                .build();
+
+        return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
+    }
+
 
 }
