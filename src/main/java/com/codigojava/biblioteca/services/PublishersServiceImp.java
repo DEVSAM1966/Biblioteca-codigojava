@@ -5,6 +5,7 @@ import com.codigojava.biblioteca.dataholders.PublishersUpdatedRecordDh;
 import com.codigojava.biblioteca.dtos.PublishersDto;
 import com.codigojava.biblioteca.entities.AuthorsEntity;
 import com.codigojava.biblioteca.entities.PublishersEntity;
+import com.codigojava.biblioteca.exceptions.BdConflictException;
 import com.codigojava.biblioteca.exceptions.BdInternalException;
 import com.codigojava.biblioteca.exceptions.BdNotFoundException;
 import com.codigojava.biblioteca.exceptions.BdNotSaveException;
@@ -103,18 +104,21 @@ public class PublishersServiceImp implements PublishersService {
         }
     }
 
-    @Transactional
+
     @Override
     public Boolean deleteById(Integer id) {
 
 
         Optional<PublishersEntity> existPublisher = publishersRepository.findById(id);
         if (existPublisher.isEmpty()) {
-            throw new BdNotFoundException("DELETE - No author found with id: " + id);
+            throw new BdNotFoundException("DELETE - No publisher found with id: " + id);
         }
         try {
             publishersRepository.deleteById(id);
             return true;
+        } catch (DataIntegrityViolationException e) {
+            log.warn("Delete for publishers - Publisher has books associated, cannot delete. Id: {}", id);
+            throw new BdConflictException("DELETE - Cannot delete publisher with id: " + id + ". It has books associated.");
         } catch (Exception e) {
             log.warn("Delete for publishers - Error deleting publisher. Possible cause: {}", e.getMessage());
             throw new BdInternalException("DELETE - Error deleting publisher. Possible cause: table missing or DB inconsistency.");
