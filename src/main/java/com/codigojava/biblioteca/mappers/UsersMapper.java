@@ -2,6 +2,7 @@ package com.codigojava.biblioteca.mappers;
 
 import com.codigojava.biblioteca.dataholders.UsersCreatedDh;
 import com.codigojava.biblioteca.dataholders.UsersUpdatedDh;
+import com.codigojava.biblioteca.dtos.UserSummaryDto;
 import com.codigojava.biblioteca.dtos.UsersDto;
 import com.codigojava.biblioteca.entities.UsersEntity;
 import org.mapstruct.Mapper;
@@ -16,7 +17,8 @@ import java.util.List;
 )
 public interface UsersMapper {
 
-    @Mapping(target = "role", defaultValue = "USER")
+    @Mapping(target = "role", ignore = true)
+    @Mapping(target = "password", ignore = true)
     UsersEntity asEntity(UsersCreatedDh usersDh);
 
     void updateEntityFromDh(UsersUpdatedDh usersDh, @MappingTarget UsersEntity entity);
@@ -26,5 +28,7 @@ public interface UsersMapper {
     UsersDto asDto(UsersEntity users);
 
     List<UsersDto> asDtoList(List<UsersEntity> usersList);
+
+    UserSummaryDto asUserSummaryDto(UsersEntity usersEntity);
 
 }

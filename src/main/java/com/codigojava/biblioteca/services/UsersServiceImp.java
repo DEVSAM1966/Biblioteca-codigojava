@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -113,7 +114,7 @@ public class UsersServiceImp implements UsersService{
         final UsersEntity users = this.usersMapper.asEntity(usersDh);
 
         try {
-            users.setRegistrationDate(LocalDate.now());
+            users.setRegistrationDate(LocalDateTime.now());
             users.setDaysDisciplinary(0);
 
             final UsersEntity userSaved = this.usersRepository.save(users);

@@ -1,11 +1,11 @@
 package com.codigojava.biblioteca.dataholders;
 
 import com.codigojava.biblioteca.entities.RoleEnum;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 public record UsersCreatedDh(
+
+
 
         @NotBlank(message = "User full name is mandatory")
         @Size(max = 120, message = "User full name cannot exceed 120 characters")
@@ -55,8 +55,8 @@ public record UsersCreatedDh(
         @Pattern(
                 regexp = "^(?=(?:.*[A-Z]){2,})(?=(?:.*[a-z]){2,})(?=.*\\d).{8,25}$",
                 message = "Password must contain at least 2 uppercase letters, 2 lowercase letters, 1 number, and be 8–25 characters long")
-        String password,
+        String password
 
-        RoleEnum role
+
 
 ) {}
