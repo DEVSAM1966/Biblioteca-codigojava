@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -21,14 +22,26 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Autowired
     public UsersRepository usersRepository;
 
+    @Autowired
+    public SecurityEntryPoint securityEntryPoint;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String tokenJwt=recuperarToken(request);
+
         if (tokenJwt != null){
-            var subject = tokenService.getSubject(tokenJwt); // devuelve userId como String
-            var usuario = usersRepository.findById(Integer.valueOf(subject)).orElseThrow();
-            var authentication= new UsernamePasswordAuthenticationToken(usuario,null,usuario.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            try {
+                var subject = tokenService.getSubject(tokenJwt); // devuelve userId como String
+                var usuario = usersRepository.findById(Integer.valueOf(subject)).orElseThrow();
+                var authentication= new UsernamePasswordAuthenticationToken(usuario,null,usuario.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            }catch (BadCredentialsException e){
+                securityEntryPoint.commence(request, response, e);
+                return;
+            }
+
         }
 
         filterChain.doFilter(request,response);

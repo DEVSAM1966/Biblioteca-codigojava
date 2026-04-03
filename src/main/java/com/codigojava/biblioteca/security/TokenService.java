@@ -6,11 +6,13 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.codigojava.biblioteca.entities.UsersEntity;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Date;
 
 @Service
 public class TokenService {
@@ -25,6 +27,7 @@ public class TokenService {
                     .withIssuer("Biblioteca API")
                     .withSubject(String.valueOf(usuario.getUserId()))
                     .withClaim("role", usuario.getRole().name())
+                    .withIssuedAt(Instant.now())
                     .withExpiresAt(fechaExpiracion())
                     .sign(algorithm);
         } catch (JWTCreationException exception){
@@ -33,7 +36,7 @@ public class TokenService {
     }
 
     private Instant fechaExpiracion() {
-        return LocalDateTime.now().plusHours(1).toInstant(ZoneOffset.of("-04:00"));
+        return Instant.now().plusSeconds(3600);
     }
 
     public String getSubject(String tokenJwt){
@@ -48,7 +51,6 @@ public class TokenService {
                     .getSubject();
 
         } catch (JWTVerificationException exception){
-            throw new RuntimeException("token invaldo o expirado");
-        }
+            throw new BadCredentialsException("token inválido o expirado");        }
     }
 }

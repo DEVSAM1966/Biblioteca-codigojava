@@ -19,6 +19,9 @@ public class SecurityConfiguration {
     @Autowired
     private SecurityFilter securityFilter;
 
+    @Autowired
+    public SecurityEntryPoint securityEntryPoint;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
@@ -29,6 +32,7 @@ public class SecurityConfiguration {
                     req.requestMatchers(HttpMethod.POST,"/login").permitAll();
                     req.anyRequest().authenticated();
                 })
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(securityEntryPoint))
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
 
