@@ -15,4 +15,10 @@ public interface UsersRepository extends JpaRepository<UsersEntity, Integer> {
     boolean existsByEmail(@NotBlank(message = "User email is mandatory") @Size(max = 120, message = "User email cannot exceed 120 characters") @Pattern(
                 regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$",
                 message = "Invalid email format") String email);
+
+    boolean existsByPhone(@NotBlank(message = "User phone is mandatory") @Size(max = 16, message = "User phone cannot exceed 16 characters") @Pattern(
+                regexp = "^\\+?[0-9\\s\\-()]{6,20}$",
+                message = "Invalid phone number format") String phone);
+
+    boolean existsByDni(@NotBlank(message = "User DNI is mandatory") @Size(max = 20, message = "User DNI cannot exceed 20 characters") String dni);
 }

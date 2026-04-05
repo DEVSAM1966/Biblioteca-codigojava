@@ -2,8 +2,6 @@ package com.codigojava.biblioteca.services;
 
 import com.codigojava.biblioteca.dataholders.UsersCreatedDh;
 import com.codigojava.biblioteca.dtos.AuthResponse;
-import com.codigojava.biblioteca.dtos.UsersDto;
-import com.codigojava.biblioteca.entities.PublishersEntity;
 import com.codigojava.biblioteca.entities.RoleEnum;
 import com.codigojava.biblioteca.entities.UsersEntity;
 import com.codigojava.biblioteca.exceptions.BdNotSaveException;
@@ -26,22 +24,26 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthServicelmp implements UserDetailsService,AuthService {
 
-    @Autowired
-    private UsersRepository usersRepository;
+    private final UsersRepository usersRepository;
 
-    @Autowired
-    private TokenService tokenService;
+    private final TokenService tokenService;
 
-    @Autowired
-    private UsersMapper usersMapper;
+    private final UsersMapper usersMapper;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
    public AuthResponse userRegister(@Valid UsersCreatedDh usersCreatedDh){
        if (usersRepository.existsByEmail(usersCreatedDh.email())) {
            log.warn("CreateUser - email {} already exists", usersCreatedDh.email());
            throw new BdNotSaveException("The email " + usersCreatedDh.email() + " already exists.");
+       }
+       if (usersRepository.existsByDni(usersCreatedDh.dni())) {
+           log.warn("CreateUser - dni {} already exists", usersCreatedDh.dni());
+           throw new BdNotSaveException("El DNI " + usersCreatedDh.dni() + " ya está registrado.");
+       }
+       if (usersRepository.existsByPhone(usersCreatedDh.phone())) {
+           log.warn("CreateUser - phone {} already exists", usersCreatedDh.phone());
+           throw new BdNotSaveException("El teléfono " + usersCreatedDh.phone() + " ya está registrado.");
        }
        UsersEntity userNew = usersMapper.asEntity(usersCreatedDh);
        userNew.setPassword(passwordEncoder.encode(usersCreatedDh.password()));
