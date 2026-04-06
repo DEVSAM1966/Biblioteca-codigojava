@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 
@@ -21,4 +22,6 @@ public interface UsersRepository extends JpaRepository<UsersEntity, Integer> {
                 message = "Invalid phone number format") String phone);
 
     boolean existsByDni(@NotBlank(message = "User DNI is mandatory") @Size(max = 20, message = "User DNI cannot exceed 20 characters") String dni);
+
+    UserDetails findByEmail(String username);
 }

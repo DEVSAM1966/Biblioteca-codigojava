@@ -3,6 +3,9 @@ package com.codigojava.biblioteca.exceptions;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -178,6 +181,36 @@ public class GlobalControlAdvice {
                 .build();
 
         return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<Object> handleBadCredentials(BadCredentialsException ex) {
+        ApiError apiError = ApiError.builder()
+                .message("Invalid email or password")
+                .description("(Exception) - Authentication failed")
+                .date(LocalDate.now())
+                .build();
+        return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<Object> handleUserNotFound(UsernameNotFoundException ex) {
+        ApiError apiError = ApiError.builder()
+                .message("No user found with that email")
+                .description("(Exception) - User not found")
+                .date(LocalDate.now())
+                .build();
+        return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(DisabledException.class)
+    public ResponseEntity<Object> handleDisabled(DisabledException ex) {
+        ApiError apiError = ApiError.builder()
+                .message("User account is disabled")
+                .description("(Exception) - User is disabled")
+                .date(LocalDate.now())
+                .build();
+        return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
     }
 
 
