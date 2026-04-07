@@ -29,7 +29,7 @@ public class SecurityConfiguration {
                 .sessionManagement(sm-> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req->{
                     req.requestMatchers(HttpMethod.POST,"/auth/register").permitAll();
-                    req.requestMatchers(HttpMethod.POST,"/login").permitAll();
+                    req.requestMatchers(HttpMethod.POST,"/auth/login").permitAll();
                     req.anyRequest().authenticated();
                 })
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(securityEntryPoint))
