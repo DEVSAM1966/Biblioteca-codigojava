@@ -30,6 +30,9 @@ public class SecurityConfiguration {
     @Autowired
     private RoleHierarchy roleHierarchy;
 
+    @Autowired
+    private CustomAccessDeniedHandler customAccessDeniedHandler;
+
     @Bean
     static RoleHierarchy roleHierarchy() {
         return RoleHierarchyImpl.withDefaultRolePrefix()
@@ -128,7 +131,10 @@ public class SecurityConfiguration {
         http
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .exceptionHandling(ex -> ex.authenticationEntryPoint(securityEntryPoint))
+                .exceptionHandling(ex -> {
+                        ex.authenticationEntryPoint(securityEntryPoint);
+                        ex.accessDeniedHandler(customAccessDeniedHandler);
+                })
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
