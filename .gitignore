@@ -40,3 +40,12 @@ uploads/
 *.jpeg
 *.pdf
 
+# Evitar que alguien copie secretos dentro del proyecto
+**/application-secret.properties
+**/*secret*.properties
+**/*secrets*/
+
+# Archivos .env
+.env
+.env.*
+*.env

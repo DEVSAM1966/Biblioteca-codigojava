@@ -9,14 +9,12 @@ public record UsersUpdatedDh(
         @Min(value = 1, message = "The userId must be greater than 0")
         Integer userId,
 
-        @NotBlank(message = "User full name is mandatory")
         @Size(max = 120, message = "User full name cannot exceed 120 characters")
         @Pattern(
                 regexp = "^[\\p{L}0-9\\s\\.,'’\\-\\u00B7]*$",
                 message = "User full name contains invalid characters")
         String fullname,
 
-        @NotBlank(message = "User DNI is mandatory")
         @Size(max = 20, message = "User DNI cannot exceed 20 characters")
         String dni,
 
@@ -38,21 +36,18 @@ public record UsersUpdatedDh(
         @Size(max = 30, message = "User country cannot exceed 30 characters")
         String country,
 
-        @NotBlank(message = "User phone is mandatory")
         @Size(max = 16, message = "User phone cannot exceed 16 characters")
         @Pattern(
                 regexp = "^\\+?[0-9\\s\\-()]{6,20}$",
                 message = "Invalid phone number format")
         String phone,
 
-        @NotBlank(message = "User email is mandatory")
         @Size(max = 120, message = "User email cannot exceed 120 characters")
         @Pattern(
                 regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$",
                 message = "Invalid email format")
         String email,
 
-        @NotBlank(message = "User password is mandatory")
         @Size(min = 8, max = 25, message = "User password cannot exceed 25 characters")
         @Pattern(
                 regexp = "^(?=(?:.*[A-Z]){2,})(?=(?:.*[a-z]){2,})(?=.*\\d).{8,25}$",
