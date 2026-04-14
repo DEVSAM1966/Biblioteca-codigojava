@@ -21,6 +21,7 @@ public interface UsersMapper {
     @Mapping(target = "password", ignore = true)
     UsersEntity asEntity(UsersCreatedDh usersDh);
 
+    @Mapping(target = "password", ignore = true)
     void updateEntityFromDh(UsersUpdatedDh usersDh, @MappingTarget UsersEntity entity);
 
     List<UsersEntity> asEntityList(List<UsersCreatedDh> usersDhList);

@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -34,6 +35,8 @@ public class UsersServiceImp implements UsersService{
 
     @NonNull
     private final UsersMapper usersMapper;
+
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public List<UsersDto> findAll() {
@@ -131,6 +134,7 @@ public class UsersServiceImp implements UsersService{
     @Transactional
     @Override
     public UsersDto updateById(final Integer id, final UsersUpdatedDh usersDh) {
+
         final UsersEntity existingUser = this.usersRepository.findById(id)
                 .orElseThrow(() -> new BdNotFoundException("UPDATE - No user found with id: " + id));
 
@@ -141,6 +145,11 @@ public class UsersServiceImp implements UsersService{
 
         try {
             usersMapper.updateEntityFromDh(usersDh, existingUser);
+
+            if (usersDh.password() != null && !usersDh.password().isBlank()) {
+                String encryptedPassword = passwordEncoder.encode(usersDh.password());
+                existingUser.setPassword(encryptedPassword);
+            }
 
             final UsersEntity updatedUser = this.usersRepository.save(existingUser);
 
