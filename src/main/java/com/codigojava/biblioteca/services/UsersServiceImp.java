@@ -1,5 +1,6 @@
 package com.codigojava.biblioteca.services;
 
+import com.codigojava.biblioteca.dataholders.UsersChangePassword;
 import com.codigojava.biblioteca.dataholders.UsersCreatedDh;
 import com.codigojava.biblioteca.dataholders.UsersUpdatedDh;
 import com.codigojava.biblioteca.dtos.UsersDto;
@@ -126,7 +127,7 @@ public class UsersServiceImp implements UsersService{
             log.warn("Save for users - Integrity violation: {}", e.getMessage());
             throw new BdNotSaveException("POST - Error saving user. Possible cause: duplicated data or constraint violation.");
         } catch (Exception e) {
-            log.warn("Save for categories - Error saving user. Possible cause: {}", e.getMessage());
+            log.warn("Save for users - Error saving user. Possible cause: {}", e.getMessage());
             throw new BdNotSaveException("POST - Error save user.  Possible cause: BD inconsistency or internal failure.");
         }
     }
@@ -159,6 +160,38 @@ public class UsersServiceImp implements UsersService{
                     "PUT - Error saving user. Possible cause: DB inconsistency or internal failure."
             );
         }
+    }
+
+    @Transactional
+    @Override
+    public Boolean changePassword(final UsersChangePassword usersDh) {
+
+        UsersEntity user = usersRepository.findByDniAndEmailAndPhone(
+                usersDh.dni(),
+                usersDh.email(),
+                usersDh.phone()
+            ).orElseThrow(() -> new BdNotFoundException(
+                "No user found with the provided DNI, Email and Phone"
+            ));
+
+        if (!usersDh.password().equals(usersDh.passwordRepeat())) {
+            throw new BdNotSaveException("Passwords do not match");
+        }
+
+        try {
+            String encryptedPassword = passwordEncoder.encode(usersDh.password());
+            user.setPassword(encryptedPassword);
+
+            usersRepository.save(user);
+            return true;
+        } catch (DataIntegrityViolationException e) {
+            log.warn("Change password - Integrity violation: {}", e.getMessage());
+            throw new BdNotSaveException("PUT - Error saving user (change of password). Possible cause: duplicated data or constraint violation.");
+        } catch (Exception e) {
+            log.warn("SChange password - Error saving user. Cause: {}", e.getMessage());
+            throw new BdNotSaveException("PUT - Error save user (change of password).  Possible cause: BD inconsistency or internal failure.");
+        }
+
     }
 
 }
