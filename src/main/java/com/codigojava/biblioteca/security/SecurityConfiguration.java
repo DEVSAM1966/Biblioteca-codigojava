@@ -57,6 +57,7 @@ public class SecurityConfiguration {
         return http
                 .securityMatcher("/users/**")
                 .authorizeHttpRequests(req->{
+                    req.requestMatchers(HttpMethod.PUT,"/users/password", "/users/password/**").permitAll();
                     req.requestMatchers(HttpMethod.GET,"/users/id/**").access(withRole("USER"));;
                     req.requestMatchers(HttpMethod.DELETE, "/users/drop/**").access(withRole("USER"));
                     req.requestMatchers(HttpMethod.POST,"/users").access(withRole("ADMIN"));

@@ -77,7 +77,7 @@ public class UsersController {
         return ResponseEntity.ok(new ApiResponse<>(this.usersService.updateById(id, usersDh)));
     }
 
-    @PutMapping(value = "change-password", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "password", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse<Boolean>> changePassword(@Valid @RequestBody final UsersChangePassword userDh) {
         return ResponseEntity.ok(new ApiResponse<>(this.usersService.changePassword(userDh)));
     }
