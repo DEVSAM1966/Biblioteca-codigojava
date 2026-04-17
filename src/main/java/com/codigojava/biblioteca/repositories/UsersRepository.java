@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UsersRepository extends JpaRepository<UsersEntity, Integer> {
 
@@ -24,4 +25,11 @@ public interface UsersRepository extends JpaRepository<UsersEntity, Integer> {
     boolean existsByDni(@NotBlank(message = "User DNI is mandatory") @Size(max = 20, message = "User DNI cannot exceed 20 characters") String dni);
 
     UserDetails findByEmail(String username);
+
+    Optional<UsersEntity> findByDniAndEmailAndPhone(
+            String dni,
+            String email,
+            String phone
+    );
+
 }

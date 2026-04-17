@@ -1,5 +1,6 @@
 package com.codigojava.biblioteca.services;
 
+import com.codigojava.biblioteca.dataholders.UsersChangePassword;
 import com.codigojava.biblioteca.dataholders.UsersCreatedDh;
 import com.codigojava.biblioteca.dataholders.UsersUpdatedDh;
 import com.codigojava.biblioteca.dtos.UsersDto;
@@ -22,5 +23,6 @@ public interface UsersService {
 
     Boolean deleteLogicById(Integer id);
 
+    Boolean changePassword(UsersChangePassword usersChangePassword);
 }
 
