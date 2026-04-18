@@ -9,7 +9,7 @@ tags:
     description: Endpoints para gestionar autores
 
   - name: Categories
-    description: Endpoints para gestionar categorías
+    description: Endpoints para gestionar categorías de libros
 
   - name: Users
     description: Endpoints para gestionar usuarios
@@ -181,6 +181,171 @@ paths:
                   timestamp:
                     type: string
                     example: "23/03/2026, 12:24:31"
+
+
+  ########################################
+  #              PUBLISHERS
+  ########################################
+
+  /publishers:
+    post:
+      tags: [ Publishers ]
+      summary: Crear un nuevo publisher
+      description: Crea un nuevo registro de editorial en la base de datos.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublishersCreatedRecordDh'
+            example:
+              publisherId: 6
+              namePublisher: "HarperCollins"
+              address: "Calle Nueva 10"
+              city: "Madrid"
+              province: "Madrid"
+              postalCode: "28001"
+              country: "España"
+              phone: "+34-910000006"
+              notes: "Editorial internacional"
+      responses:
+        '201':
+          description: Publisher creado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '409':
+          description: El publisherId ya existe
+        '500':
+          description: Error interno al guardar el publisher
+
+    get:
+      tags: [ Publishers ]
+      summary: Obtener todos los publishers
+      description: Devuelve la lista completa de editoriales.
+      responses:
+        '200':
+          description: Lista de publishers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PublishersDto'
+
+  /publishers/id/{id}:
+    get:
+      tags: [ Publishers ]
+      summary: Buscar publisher por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Publisher encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: No existe un publisher con ese ID
+
+    put:
+      tags: [ Publishers ]
+      summary: Actualizar un publisher por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublishersUpdatedRecordDh'
+            example:
+              publisherId: 1
+              namePublisher: "Penguin Random House"
+              address: "Calle Mayor 12"
+              city: "Madrid"
+              province: "Madrid"
+              postalCode: "28013"
+              country: "España"
+              phone: "+34-910000001"
+              notes: "Editorial internacional"
+      responses:
+        '200':
+          description: Publisher actualizado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: No existe un publisher con ese ID
+        '400':
+          description: El publisherId del body no coincide con el ID del path
+        '500':
+          description: Error interno al actualizar el publisher
+
+    delete:
+      tags: [ Publishers ]
+      summary: Eliminar un publisher por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 5
+      responses:
+        '200':
+          description: Publisher eliminado correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: boolean
+                    example: true
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
+        '404':
+          description: No existe un publisher con ese ID
+        '409':
+          description: No se puede eliminar porque tiene libros asociados
+        '500':
+          description: Error interno al eliminar el publisher
+
+  /publishers/name/{name}:
+    get:
+      tags: [ Publishers ]
+      summary: Buscar publishers por nombre
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "Planeta"
+      responses:
+        '200':
+          description: Lista de publishers encontrados
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: No existen publishers con ese nombre
 
 
   ########################################
@@ -512,7 +677,10 @@ paths:
   /users/drop/id/{id}:
     delete:
       tags: [ Users ]
-      summary: Borrado lógico de usuario por ID
+      summary: Borrado lógico de usuario por ID.
+      description: >
+        No se da de baja físicamente en la BD al usuario.
+        Se pone a true el campo userDrop para indicar a la aplicación que es un usuario dado de baja.
       parameters:
         - name: id
           in: path
@@ -534,6 +702,46 @@ paths:
                   timestamp:
                     type: string
                     example: "23/03/2026, 12:24:31"
+
+  /users/password:
+    put:
+      tags: [ Users ]
+      summary: Cambiar contraseña de un usuario
+      description: >
+        Cambia la contraseña de un usuario verificando DNI, email y teléfono.
+        La nueva contraseña debe coincidir con `passwordRepeat` y cumple las reglas de seguridad.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsersChangePassword'
+            example:
+              dni: "12345678A"
+              email: "user@example.com"
+              phone: "+34123456789"
+              password: "NewPasswordAA1"
+              passwordRepeat: "NewPasswordAA1"
+      responses:
+        '200':
+          description: Contraseña cambiada correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: boolean
+                    example: true
+                  timestamp:
+                    type: string
+                    example: "23/03/2026, 12:24:31"
+        '400':
+          description: Error de validación o passwords no coinciden
+        '404':
+          description: No existe un usuario con los datos proporcionados
+        '500':
+          description: Error interno al guardar la nueva contraseña
 
 
   ########################################
@@ -1293,6 +1501,125 @@ components:
           pattern: "^[\\p{L} .'’\\-]+$"
           example: "Mario Vargas Llosa"
 
+    ########################################
+    #              PUBLISHERS SCHEMAS
+    ########################################
+
+    PublishersCreatedRecordDh:
+      type: object
+      required:
+        - publisherId
+        - namePublisher
+      properties:
+        publisherId:
+          type: integer
+          example: 6
+        namePublisher:
+          type: string
+          maxLength: 100
+          example: "HarperCollins"
+        address:
+          type: string
+          maxLength: 100
+          example: "Calle Nueva 10"
+        city:
+          type: string
+          maxLength: 40
+          example: "Madrid"
+        province:
+          type: string
+          maxLength: 30
+          example: "Madrid"
+        postalCode:
+          type: string
+          maxLength: 20
+          example: "28001"
+        country:
+          type: string
+          maxLength: 30
+          example: "España"
+        phone:
+          type: string
+          maxLength: 16
+          example: "+34-910000006"
+        notes:
+          type: string
+          maxLength: 255
+          example: "Editorial internacional"
+
+    PublishersUpdatedRecordDh:
+      type: object
+      required:
+        - publisherId
+        - namePublisher
+      properties:
+        publisherId:
+          type: integer
+          example: 1
+        namePublisher:
+          type: string
+          maxLength: 100
+          example: "Penguin Random House"
+        address:
+          type: string
+          maxLength: 100
+          example: "Calle Mayor 12"
+        city:
+          type: string
+          maxLength: 40
+          example: "Madrid"
+        province:
+          type: string
+          maxLength: 30
+          example: "Madrid"
+        postalCode:
+          type: string
+          maxLength: 20
+          example: "28013"
+        country:
+          type: string
+          maxLength: 30
+          example: "España"
+        phone:
+          type: string
+          maxLength: 16
+          example: "+34-910000001"
+        notes:
+          type: string
+          maxLength: 255
+          example: "Editorial internacional"
+
+    PublishersDto:
+      type: object
+      properties:
+        publisherId:
+          type: integer
+          example: 1
+        namePublisher:
+          type: string
+          example: "Penguin Random House"
+        address:
+          type: string
+          example: "Calle Mayor 12"
+        city:
+          type: string
+          example: "Madrid"
+        province:
+          type: string
+          example: "Madrid"
+        postalCode:
+          type: string
+          example: "28013"
+        country:
+          type: string
+          example: "España"
+        phone:
+          type: string
+          example: "+34-910000001"
+        notes:
+          type: string
+          example: "Editorial internacional"
+
 
     ########################################
     #              CATEGORIES SCHEMAS
@@ -1523,6 +1850,38 @@ components:
           example: 0
         role:
           $ref: '#/components/schemas/RoleEnum'
+
+    UsersChangePassword:
+      type: object
+      required:
+        - dni
+        - email
+        - phone
+        - password
+        - passwordRepeat
+      properties:
+        dni:
+          type: string
+          maxLength: 20
+          example: "12345678A"
+        email:
+          type: string
+          maxLength: 120
+          example: "user@example.com"
+        phone:
+          type: string
+          maxLength: 16
+          example: "+34123456789"
+        password:
+          type: string
+          minLength: 8
+          maxLength: 25
+          example: "NewPasswordAA1"
+        passwordRepeat:
+          type: string
+          minLength: 8
+          maxLength: 25
+          example: "NewPasswordAA1"
 
 
     ########################################
