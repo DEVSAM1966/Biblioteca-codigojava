@@ -3,10 +3,10 @@
 ## 1. Descripción del proyecto
 
 Este proyecto corresponde a la parte backend de una biblioteca en línea.
-Desarrollado con Spring Boot + java, siguiendo una arquitectura MVC estricta y utilizando Dataholders para la validación de entrada y DTOS para la salida.
+Desarrollado con Spring Boot + java, siguiendo una arquitectura monolito con un patŕon de diseño MVC estricta y utilizando Dataholders para la validación de entrada y DTOS para la salida.
 Incluye módulos para gestionar Libros, Autores, Categorías, Editoriales, Usuarios, Préstamos, Historiales y Autenticación, con endpoints documentados y validados.
 
-La persistencia de datos se maneja mediante JPA, conectado a una base de datos que se ejecuta en un contenedor Docker.
+La persistencia de datos se maneja mediante JPA, conectado a una base de datos MySQL que se ejecuta en un contenedor Docker.
 
 ---
 
@@ -25,6 +25,11 @@ Para que este proyecto funcione se necesita tener instalado en local la version 
 java -version
 ```
 
+El motivo de usar esta versión de Java es debido al uso de las librerias **mapstruct** y **mapstruct-processor** que 
+en un nivel estable (un nivel superior no es estable).   A su vez con la versión 17 de Java nos obliga a usar la versión 
+**Spring 3.3.6**.
+
+
 También para programar se recomienda el uso del **IDE Intellij IDEA** que es el estandar de la industria en Java.
 
 ### 2.3 Instalación del Contenedor Docker
@@ -36,6 +41,12 @@ docker-compose up
 ```
 
 Esto creará el servicio de base de datos con las credenciales definidas en ``docker-compose.yml``. Se genera el contendor docker con el esquema **biblio-codejava** y los datos en la distintas tablas.
+
+Internamente en el momento de crear el contenedor con el motor de MySQL 8.0 se ha ejecutado los siguientes scripts SQL que están contenidos el el directorio **Biblioteca-codigojava/sql**:
+
+- **create_schema.sql**:  Este script es el responsable de creación del esquema, usuario app_user, permisos del usuario, tablas.
+
+- **data.sql**:  Añade a las tablas un juego de datos básico para hacer pruebas.
 
 ---
 
@@ -75,7 +86,7 @@ A continuación, ejecutaremos instrucciones MySQL para verificar la correcta imp
 #### Paso 1 – Cambiar de Esquema
 
 ```sql
-use biblio-codigojava
+use biblio_codigojava
 ```
 
 Resultado esperado: **Database changed**
@@ -112,22 +123,129 @@ SELECT * FROM loans;
 
 Resultado esperado: **authors, books, categories, histories, loans, publishers, users**
 
+### 3.3 Usuarios de MySQL
+
+Los usuarios que existen en la Base de Datos son:
+
+1. **root**  con password  **Jean-Luc_Picard_1966** (usuario creado en el contenedor Docker)
+2. **app_user**  con password  **Egdpababpec** (usuario creado en el script create_schema.sql y ejecutado en el momento de creación del contenedor Docker).
+
 ---
 
 ## 4. Pasos para Ejecutar Correctamente la Aplicación
 ### 4.1 Crear Directorios para Guardar Portadas y Libros
 
-Desde Intellij IDEA, dentro de la carpeta del proyecto Biblioteca-codigojava, crea una carpeta llamada uploads, y dentro de ella:
+Desde Intellij IDEA, dentro de la carpeta del proyecto Biblioteca-codigojava, crea una carpeta llamada uploads, y dentro de esta carpeta (uploads) creamos estas otras carpetas:
 
  -   cover
  -   file
 
-**uploads/cover** almacenará portadas en formato JPEG.
-**uploads/file** almacenará los archivos PDF de los libros.
+**Biblioteca-codigojava/uploads/cover** almacenará portadas en formato JPEG.
+**Biblioteca-codigojava/uploads/file** almacenará los archivos PDF de los libros.
 
 El archivo .gitignore excluye la carpeta uploads/ para evitar subir archivos pesados al repositorio.
 
-### 4.2 Iniciar la Aplicación
+### 4.2 Configuración del archivo: application.properties
+
+Este proyecto utiliza Spring Boot y requiere una configuración básica para conectarse a la base de datos, gestionar seguridad JWT y cargar variables externas.
+A continuación se explica cada propiedad para que cualquier desarrollador que clone el repositorio pueda configurarlo correctamente.
+
+```java
+spring.application.name=biblioteca
+server.port=9800
+```
+- **spring.application.name**: Nombre interno de la aplicación (aparece en logs y herramientas de Spring).
+- **server.port**: Puerto donde se ejecuta el backend (http://localhost:9800).
+
+```java
+spring.config.import=optional:file:/home/sam/SAM-PROYECTOS/Biblioteca-codigojava-secrets/application-secret.properties
+```
+
+Permite cargar credenciales y secretos desde un archivo externo no incluido en el repositorio, evitando exponer datos sensibles.
+
+    Si clonas el proyecto, deberás crear tu propio archivo 
+    application-secret.properties con las variables necesarias.
+    Recuerda que el directorio donde se ubica application-secret.properties 
+    cambiara (aqui en el ejemplo muestro donde lo ubico en local).
+
+    IMPORTANTE:  Este fichero esta fuera del proyecto y por tanto deberás 
+    de crearlo manualmente, variara la ruta por supesto.
+
+
+El contenido de mi **application-secrect.properties** es el siguiente:
+```java
+# Credenciales de MySQL 
+BIBLIO_USER=root
+BIBLIO_SECRET=Jean-Luc_Picard_1966
+
+# Clave secreta para JWT
+JWT_SECRET=f06756f8d66b7f85619c0672eeca1cdd
+```
+El valor de JWT_SECRET fue elegido aleatoriamente, pueden colocar otro string.
+
+
+La configuración de la base de datos MySQL:
+```java
+spring.datasource.url=jdbc:mysql://localhost:3310/biblio_codigojava?useUnicode=true&characterEncoding=UTF-8&connectionCollation=utf8mb4_unicode_ci&serverTimezone=UTC
+spring.datasource.username=${BIBLIO_USER}
+spring.datasource.password=${BIBLIO_SECRET}
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+```
+- **spring.datasource.url**: URL de conexión a MySQL (puerto 3310 en este proyecto).
+
+- **spring.datasource.username / password**: Se obtienen desde variables externas (BIBLIO_USER, BIBLIO_SECRET).
+
+- **driver-class-name**: Driver JDBC de MySQL.
+
+Asegúrate de tener MySQL corriendo en el puerto correcto y la base de datos creada.
+
+
+Para la configuración de JPA / Hibernate.
+```java
+spring.jpa.hibernate.ddl-auto=none
+spring.jpa.show-sql=true
+spring.jpa.open-in-view=false
+```
+- **ddl-auto=none**: No modifica la estructura de la base de datos (modo seguro para producción).
+
+- **show-sql=true**: Muestra las consultas SQL en consola (útil para desarrollo).
+
+- **open-in-view=false**: Cierra la sesión de Hibernate al salir del servicio.
+Mejora la arquitectura y evita consultas inesperadas durante la serialización.
+
+
+Definición de la subida de archivos.
+```java
+spring.servlet.multipart.max-file-size=50MB
+spring.servlet.multipart.max-request-size=50MB
+```
+Permite subir archivos grandes (hasta 50 MB), útil si el proyecto maneja imágenes o documentos.
+
+
+Seguridad JWT.
+```java
+api.security.token.secret=${JWT_SECRET}
+```
+Clave secreta para firmar y validar tokens JWT.
+Debe definirse en el archivo de secretos externo (ver más arriba en application-secret.properties).
+
+Resumen para quien clone el proyecto.
+
+1. **MySQL** corriendo en localhost:3310.
+
+2. Una base de datos llamada **biblio_codigojava**.
+
+3- Un archivo externo llamado **application-secrect.properties** (debe estar fuera del directorio del proyecto) con las variables:
+
+```java
+BIBLIO_USER=usuario_mysql
+BIBLIO_SECRET=contraseña_mysql
+JWT_SECRET=clave_para_tokens
+```
+4. Java 17+ y Maven instalados.
+
+
+### 4.3 Iniciar la Aplicación
 
 Desde Intellij IDEA localizar el fichero **BibliotecaApplication.java** en el ``src/main/java/com-codigojava.biblioteca``, marcarlo con el mouse, botón derecho y elegir Run.
 
@@ -194,3 +312,7 @@ Esta documentación esta implementa con Redoc OpenAPI.
 - **Iván Toledo**
 - **Mabel Cárdenas Fernández**
 
+
+    NOTA:  Si revisa en profundidad el código de este proyecto verá que los estilos de programación pueden variar.
+
+    Este proyecto colaboraron 3 desarrolladores con sus estilos y formas de programación en java.

@@ -73,10 +73,4 @@ public class PublishersController {
         return ResponseEntity.ok(new ApiResponse<>(delete));
     }
 
-
-
-
-
-
-
 }
