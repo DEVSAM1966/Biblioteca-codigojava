@@ -184,6 +184,59 @@ paths:
 
 
   ########################################
+  #              AUTH PATHS
+  ########################################
+
+  /auth/register:
+    post:
+      tags: [ Auth ]
+      summary: Registrar un nuevo usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsersCreatedDh'
+      responses:
+        '201':
+          description: Usuario registrado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseAuthResponse'
+        '400':
+          description: Datos inválidos
+        '409':
+          description: Email, DNI o teléfono ya existen
+        '500':
+          description: Error interno al registrar el usuario
+
+  /auth/login:
+    post:
+      tags: [ Auth ]
+      summary: Iniciar sesión y obtener token JWT
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DatosAutenticacionDh'
+      responses:
+        '200':
+          description: Login correcto
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseAuthResponse'
+        '400':
+          description: Datos inválidos
+        '401':
+          description: Credenciales incorrectas
+        '500':
+          description: Error interno al autenticar
+
+
+  ########################################
   #              PUBLISHERS
   ########################################
 
@@ -1500,6 +1553,59 @@ components:
           maxLength: 100
           pattern: "^[\\p{L} .'’\\-]+$"
           example: "Mario Vargas Llosa"
+
+    ########################################
+    #              AUTH SCHEMAS
+    ########################################
+
+    DatosAutenticacionDh:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          example: "usuario@example.com"
+        password:
+          type: string
+          example: "Password123"
+
+    UserSummaryDto:
+      type: object
+      properties:
+        userId:
+          type: integer
+          example: 12
+        fullname:
+          type: string
+          example: "Juan Pérez"
+        email:
+          type: string
+          example: "juan@example.com"
+        role:
+          type: string
+          example: "USER"
+
+    AuthResponse:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/UserSummaryDto'
+        authorization:
+          type: string
+          description: "JWT token"
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+
+    ApiResponseAuthResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/AuthResponse'
+        timestamp:
+          type: string
+          example: "23/03/2026, 12:24:31"
+
 
     ########################################
     #              PUBLISHERS SCHEMAS

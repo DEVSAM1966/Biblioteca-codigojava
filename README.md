@@ -3,10 +3,10 @@
 ## 1. Descripción del proyecto
 
 Este proyecto corresponde a la parte backend de una biblioteca en línea.
-Desarrollado con Spring Boot + java, siguiendo una arquitectura MVC estricta y utilizando Dataholders para la validación de entrada y DTOS para la salida.
+Desarrollado con Spring Boot + java, siguiendo una arquitectura monolito con un patŕon de diseño MVC estricta y utilizando Dataholders para la validación de entrada y DTOS para la salida.
 Incluye módulos para gestionar Libros, Autores, Categorías, Editoriales, Usuarios, Préstamos, Historiales y Autenticación, con endpoints documentados y validados.
 
-La persistencia de datos se maneja mediante JPA, conectado a una base de datos que se ejecuta en un contenedor Docker.
+La persistencia de datos se maneja mediante JPA, conectado a una base de datos MySQL que se ejecuta en un contenedor Docker.
 
 ---
 
@@ -25,6 +25,11 @@ Para que este proyecto funcione se necesita tener instalado en local la version 
 java -version
 ```
 
+El motivo de usar esta versión de Java es debido al uso de las librerias **mapstruct** y **mapstruct-processor** que 
+en un nivel estable (un nivel superior no es estable).   A su vez con la versión 17 de Java nos obliga a usar la versión 
+**Spring 3.3.6**.
+
+
 También para programar se recomienda el uso del **IDE Intellij IDEA** que es el estandar de la industria en Java.
 
 ### 2.3 Instalación del Contenedor Docker
@@ -37,7 +42,7 @@ docker-compose up
 
 Esto creará el servicio de base de datos con las credenciales definidas en ``docker-compose.yml``. Se genera el contendor docker con el esquema **biblio-codejava** y los datos en la distintas tablas.
 
-Internamente en el momento de crear el contenedor con el motor de MySQL 8.0 se ha ejecutado los siguientes scripts SQL que están contenidos el el directorio sql:
+Internamente en el momento de crear el contenedor con el motor de MySQL 8.0 se ha ejecutado los siguientes scripts SQL que están contenidos el el directorio **Biblioteca-codigojava/sql**:
 
 - **create_schema.sql**:  Este script es el responsable de creación del esquema, usuario app_user, permisos del usuario, tablas.
 
@@ -130,13 +135,13 @@ Los usuarios que existen en la Base de Datos son:
 ## 4. Pasos para Ejecutar Correctamente la Aplicación
 ### 4.1 Crear Directorios para Guardar Portadas y Libros
 
-Desde Intellij IDEA, dentro de la carpeta del proyecto Biblioteca-codigojava, crea una carpeta llamada uploads, y dentro de ella:
+Desde Intellij IDEA, dentro de la carpeta del proyecto Biblioteca-codigojava, crea una carpeta llamada uploads, y dentro de esta carpeta (uploads) creamos estas otras carpetas:
 
  -   cover
  -   file
 
-**uploads/cover** almacenará portadas en formato JPEG.
-**uploads/file** almacenará los archivos PDF de los libros.
+**Biblioteca-codigojava/uploads/cover** almacenará portadas en formato JPEG.
+**Biblioteca-codigojava/uploads/file** almacenará los archivos PDF de los libros.
 
 El archivo .gitignore excluye la carpeta uploads/ para evitar subir archivos pesados al repositorio.
 
@@ -160,10 +165,14 @@ Permite cargar credenciales y secretos desde un archivo externo no incluido en e
 
     Si clonas el proyecto, deberás crear tu propio archivo 
     application-secret.properties con las variables necesarias.
-    Recuerda que el directorio cambiara en cada usuario.
+    Recuerda que el directorio donde se ubica application-secret.properties 
+    cambiara (aqui en el ejemplo muestro donde lo ubico en local).
+
+    IMPORTANTE:  Este fichero esta fuera del proyecto y por tanto deberás 
+    de crearlo manualmente, variara la ruta por supesto.
 
 
-El contenido de mi application-secrect.properties es el siguiente:
+El contenido de mi **application-secrect.properties** es el siguiente:
 ```java
 # Credenciales de MySQL 
 BIBLIO_USER=root
@@ -172,6 +181,8 @@ BIBLIO_SECRET=Jean-Luc_Picard_1966
 # Clave secreta para JWT
 JWT_SECRET=f06756f8d66b7f85619c0672eeca1cdd
 ```
+El valor de JWT_SECRET fue elegido aleatoriamente, pueden colocar otro string.
+
 
 La configuración de la base de datos MySQL:
 ```java
@@ -301,3 +312,7 @@ Esta documentación esta implementa con Redoc OpenAPI.
 - **Iván Toledo**
 - **Mabel Cárdenas Fernández**
 
+
+    NOTA:  Si revisa en profundidad el código de este proyecto verá que los estilos de programación pueden variar.
+
+    Este proyecto colaboraron 3 desarrolladores con sus estilos y formas de programación en java.
