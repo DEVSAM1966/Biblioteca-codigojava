@@ -49,6 +49,21 @@ public class SecurityConfiguration {
     }
 
     @Bean
+    @Order(0)
+    public SecurityFilterChain authSecurityFilterChain(HttpSecurity http) throws Exception {
+
+        applyCommonConfig(http);
+
+        return http
+                .securityMatcher("/auth/**")
+                .authorizeHttpRequests(req -> {
+                    req.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
+                    req.requestMatchers("/auth/**").permitAll();
+                })
+                .build();
+    }
+
+    @Bean
     @Order(1)
     public SecurityFilterChain userSecurityFilterChain(HttpSecurity http) throws Exception {
 
@@ -57,6 +72,7 @@ public class SecurityConfiguration {
         return http
                 .securityMatcher("/users/**")
                 .authorizeHttpRequests(req->{
+                    req.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                     req.requestMatchers(HttpMethod.PUT,"/users/password", "/users/password/**").permitAll();
                     req.requestMatchers(HttpMethod.GET,"/users/id/**").access(withRole("USER"));;
                     req.requestMatchers(HttpMethod.DELETE, "/users/drop/**").access(withRole("USER"));
@@ -78,6 +94,8 @@ public class SecurityConfiguration {
         return http
                 .securityMatcher("/loans/**")
                 .authorizeHttpRequests(req->{
+                    req.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
+                    req.requestMatchers(HttpMethod.GET, "/loans/me").access(withRole("USER"));
                     req.requestMatchers(HttpMethod.GET,"/loans/user/**", "/loans/isbn/**").access(withRole("SUPPORT"));
                     req.requestMatchers(HttpMethod.GET,"/loans" ,"/loans/id/**").access(withRole("USER"));
                     req.requestMatchers(HttpMethod.POST,"/loans" ).access(withRole("USER"));
@@ -97,6 +115,7 @@ public class SecurityConfiguration {
         return http
                 .securityMatcher("/histories/**")
                 .authorizeHttpRequests(req->{
+                    req.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                     req.requestMatchers(HttpMethod.GET,"/histories","/histories/id/**","/histories/loan/**").access(withRole("USER"));
                     req.requestMatchers(HttpMethod.POST,"/histories" ).access(withRole("SUPPORT"));
                     req.requestMatchers(HttpMethod.PUT,"/histories/id/**").access(withRole("SUPPORT"));
@@ -115,6 +134,7 @@ public class SecurityConfiguration {
         return http
                 .securityMatcher("/books/**","/authors/**", "/publishers/**", "/categories/**")
                 .authorizeHttpRequests(req->{
+                    req.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                     req.requestMatchers(HttpMethod.GET,"/books/public/**").permitAll();
                     req.requestMatchers(HttpMethod.GET).authenticated();
                     req.requestMatchers(HttpMethod.POST).access(withRole("SUPPORT"));
@@ -131,6 +151,7 @@ public class SecurityConfiguration {
     private void applyCommonConfig(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
+                .cors(cors -> {}) // ← ACTIVAR CORS
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(ex -> {
                         ex.authenticationEntryPoint(securityEntryPoint);

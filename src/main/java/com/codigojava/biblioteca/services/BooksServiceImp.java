@@ -72,7 +72,7 @@ public class BooksServiceImp implements BooksService {
     }
 
     @Override
-    public Page<BooksPublicDto> findAllPublic(int page, int limit, Long authorId, Long categoryId) {
+    public List<BooksPublicDto> findAllPublic(int page, int limit, Long authorId, Long categoryId) {
         Pageable pageable = PageRequest.of(page - 1, limit, Sort.by("title").ascending());
 
         Page<BooksEntity> booksPage =
@@ -80,14 +80,17 @@ public class BooksServiceImp implements BooksService {
 
         if (booksPage.isEmpty()) {
             log.warn("FindAllPublic - No books found with given filters");
-            return Page.empty();
+            return Collections.emptyList();
         }
 
-        return booksPage.map(booksMapper::asPublicDto);
+        return booksPage.getContent()
+                .stream()
+                .map(booksMapper::asPublicDto)
+                .toList();
     }
 
     @Override
-    public Page<BooksPublicDto> findAllPrivate(int page, int limit, Long authorId, Long categoryId) {
+    public List<BooksPublicDto> findAllPrivate(int page, int limit, Long authorId, Long categoryId) {
         Pageable pageable = PageRequest.of(page - 1, limit, Sort.by("title").ascending());
 
         Page<BooksEntity> booksPage =
@@ -95,10 +98,13 @@ public class BooksServiceImp implements BooksService {
 
         if (booksPage.isEmpty()) {
             log.warn("FindAllPrivate - No books found with given filters");
-            return Page.empty();
+            return Collections.emptyList();
         }
 
-        return booksPage.map(booksMapper::asPublicDto);
+        return booksPage.getContent()
+                .stream()
+                .map(booksMapper::asPublicDto)
+                .toList();
     }
 
     @Override
