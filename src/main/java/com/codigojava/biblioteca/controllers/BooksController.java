@@ -42,7 +42,7 @@ public class BooksController {
             value = "/public",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<ApiResponse<Page<BooksPublicDto>>> findAllPublic(
+    public ResponseEntity<ApiResponse<List<BooksPublicDto>>> findAllPublic(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int limit,
             @RequestParam(required = false) Long authorId,
@@ -55,7 +55,7 @@ public class BooksController {
             value = "/private",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<ApiResponse<Page<BooksPublicDto>>> findAllPrivate(
+    public ResponseEntity<ApiResponse<List<BooksPublicDto>>> findAllPrivate(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int limit,
             @RequestParam(required = false) Long authorId,

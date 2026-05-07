@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,7 +40,7 @@ public class LoansController {
         return ResponseEntity.ok(new ApiResponse<>(loansService.findById(id)));
     }
 
-    @GetMapping(value = "/userid/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/user/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse<List<LoansDto>>> findByUserId(@PositiveId @PathVariable final Integer id) {
 
         return ResponseEntity.ok(new ApiResponse<>(this.loansService.findByUserId(id)));
@@ -71,5 +72,16 @@ public class LoansController {
 
         return ResponseEntity.ok(new ApiResponse<>(this.loansService.updateById(id, loansDh)));
     }
+
+    @GetMapping(value = "/me", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse<List<LoansDto>>> findMyLoans(Authentication authentication) {
+
+        // authentication.getPrincipal() es UsersEntity
+        var user = (com.codigojava.biblioteca.entities.UsersEntity) authentication.getPrincipal();
+        Integer userId = user.getUserId();
+
+        return ResponseEntity.ok(new ApiResponse<>(this.loansService.findByUserId(userId)));
+    }
+
 
 }
